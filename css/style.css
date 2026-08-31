@@ -160,7 +160,7 @@ a:hover { color: var(--accent); }
 
 .hero { position: relative; z-index: 0; padding-top: 104px; padding-bottom: 0; text-align: right; }
 .hero .eyebrow { margin-bottom: 24px; }
-.hero-head { position: relative; font-size: 104px; max-width: 760px; margin-left: auto; margin-top: 24px; }
+.hero-head { position: relative; font-size: 104px; max-width: 860px; margin-left: auto; margin-top: 24px; }
 .hero-foot { margin-top: 56px; }
 .hero-profile { position: relative; }
 .hero-avatar-slot {
