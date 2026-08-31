@@ -345,7 +345,11 @@ a:hover { color: var(--accent); }
    has-diagram so this override doesn't depend on stylesheet source order
    against the 480px rule above. */
 .svc-acc-row.has-wheel.is-open .svc-acc-body { max-height: 960px; }
-.svc-diagram { margin: 4px 0 22px; }
+/* container-type lets the @container rules below key off the diagram's own
+   available width rather than the viewport — the accordion column's real
+   width already depends on the sidebar/padding tiers above, so querying the
+   diagram's own box is the only way to get the actual breakpoint right. */
+.svc-diagram { margin: 4px 0 22px; container-type: inline-size; }
 
 .svc-diagram .canvas {
   position: relative;
@@ -564,22 +568,115 @@ a:hover { color: var(--accent); }
 @media (prefers-reduced-motion: reduce) {
   .svc-diagram .connector-beam { animation: none !important; opacity: 0; }
 }
-/* The accordion column's real available width is viewport minus .svc-section's
-   side padding, the rotated "SERVICES" sidebar, and its gap — not the raw
-   viewport width. This threshold was originally 1650px, picked back when
-   side margins stayed at the full 280px all the way down to 1024px (a
-   "dead zone" — no diagrams AND no reclaimed width). Once that margin tier
-   was fixed below, the diagrams were re-tested directly at each real
-   breakpoint rather than re-guessing a number: 1024px viewport (745px
-   available column) — all three diagrams (chain, hub, wheel) render
-   cleanly, confirmed via screenshot, nothing overlapping or clipped. 800px
-   viewport (521px available) — genuinely broken (chain's circles overlap
-   each other, the hub's output cards get clipped). So the real floor sits
-   right at the site's own existing 1024px tablet breakpoint, not somewhere
-   in the 1024-1650px range that used to be blanket-hidden. Diagrams now
-   show for the entire tablet tier and up; only truly hide below it. */
+/* Below 1024px the accordion column gets narrow enough (see the @container
+   rules further down) that the desktop 3-column/single-row diagram layouts
+   stop fitting — chain circles overlap, hub output cards clip. Rather than
+   hiding the diagrams here (the old behavior), each one gets a stacked
+   narrow-width layout instead. Collapsing/expanding a row also stops making
+   sense once every row always shows its diagram, so the accordion itself
+   goes always-open here too: no more clipped body, no + button, and the
+   is-open-only accent styling (which would otherwise apply unevenly, since
+   only row 1 carries that class in the markup) is reset back to the plain
+   card look for every row. */
 @media (max-width: 1023px) {
-  .svc-diagram { display: none; }
+  .svc-acc-row .svc-acc-body {
+    max-height: none !important;
+    opacity: 1 !important;
+    overflow: visible;
+  }
+  .svc-acc-plus { display: none; }
+  .svc-acc-head { cursor: default; }
+  .svc-acc-row.is-open {
+    box-shadow: 8px 8px 16px var(--shadow-dark), -8px -8px 16px var(--shadow-light);
+  }
+  .svc-acc-row.is-open .svc-acc-name { color: inherit; }
+}
+
+/* Per-diagram narrow layouts, keyed off the diagram's own available width
+   (see .svc-diagram's container-type above) rather than a viewport
+   breakpoint — 560px is roughly where the desktop layouts start to overlap,
+   confirmed against the same 800px-viewport (521px column / ~360px diagram)
+   test case that originally proved the old blanket-hide threshold. */
+@container (max-width: 560px) {
+  /* Hub diagram (Workflow Automation): trigger -> hub -> outputs, stacked
+     top to bottom instead of left to right. svcLayoutHub in main.js switches
+     its connector math to match (top/bottom instead of left/right) using
+     this same 560px number. */
+  .svc-diagram .nodes {
+    grid-template-columns: 1fr;
+    min-height: 0;
+    gap: 18px;
+  }
+  .svc-diagram .node--trigger,
+  .svc-diagram .node--hub,
+  .svc-diagram .outputs {
+    grid-column: 1;
+    justify-self: center;
+  }
+  .svc-diagram .outputs { flex-direction: column; align-items: center; }
+
+  /* Sequential pipeline (Lead Generation): the alternating label-above/
+     label-below row becomes a plain top-to-bottom list, icon then label.
+     svcLayoutChain's connector math already works unchanged here — it
+     measures each circle's real position, and a vertical stack with every
+     circle at the same x collapses its horizontal S-curve into a straight
+     vertical line on its own. */
+  .svc-diagram .zigzag-row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 20px;
+  }
+  .svc-diagram .circle-node {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-start;
+    text-align: left;
+    gap: 14px;
+  }
+  .svc-diagram .circle-node .clabel { max-width: none; }
+
+  /* CRM wheel: the radial layout's node labels become illegible once the
+     whole thing scales below ~35%, so under this width svcLayoutWheel skips
+     the radial build entirely (adding .is-grid) and this take over — brain
+     avatar on top, the 9 areas as a plain icon+label grid below. */
+  .svc-diagram .canvas--wheel.is-grid svg.connectors { display: none; }
+  .svc-diagram .canvas--wheel.is-grid .wheel-viewport { height: auto; }
+  .svc-diagram .canvas--wheel.is-grid .wheel-wrap {
+    position: static;
+    width: auto;
+    height: auto;
+    transform: none;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 22px 10px;
+    justify-items: center;
+  }
+  .svc-diagram .canvas--wheel.is-grid .brain-avatar {
+    position: relative;
+    top: auto; left: auto;
+    transform: none;
+    grid-column: 1 / -1;
+    margin: 0 auto 4px;
+  }
+  .svc-diagram .canvas--wheel.is-grid .wheel-node {
+    position: static;
+    transform: none;
+    width: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+  }
+  .svc-diagram .canvas--wheel.is-grid .wheel-node .circle { width: 56px; height: 56px; }
+  .svc-diagram .canvas--wheel.is-grid .wheel-node .circle svg { width: 24px; height: 24px; }
+  .svc-diagram .canvas--wheel.is-grid .wheel-node .label {
+    position: static;
+    transform: none;
+    white-space: normal;
+    text-align: center;
+    font-size: 11.5px;
+  }
 }
 @media (max-width: 1650px) {
   /* Side margins used to stay at the full 280px desktop value all the way

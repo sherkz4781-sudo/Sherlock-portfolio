@@ -31,13 +31,27 @@
     });
   });
 
+  // Below 1024px every service row shows its body permanently (see the
+  // matching @media block in style.css) — the + button is hidden and
+  // clicking the header is a no-op there, so aria-expanded should just
+  // read true rather than tracking a toggle nobody can reach.
+  var svcNarrowQuery = window.matchMedia('(max-width: 1023px)');
   document.querySelectorAll('[data-svc]').forEach(function (row) {
     var button = row.querySelector('[data-svc-toggle]');
     button.addEventListener('click', function () {
+      if (svcNarrowQuery.matches) return;
       var isOpen = row.classList.toggle('is-open');
       button.setAttribute('aria-expanded', String(isOpen));
     });
   });
+  function svcSyncAccordionAria() {
+    if (!svcNarrowQuery.matches) return;
+    document.querySelectorAll('[data-svc] [data-svc-toggle]').forEach(function (button) {
+      button.setAttribute('aria-expanded', 'true');
+    });
+  }
+  svcSyncAccordionAria();
+  svcNarrowQuery.addEventListener('change', svcSyncAccordionAria);
 
   document.querySelectorAll('[data-reveal-group]').forEach(function (group) {
     var items = group.querySelectorAll(':scope > .reveal-drop, :scope > .reveal-left, :scope > .reveal-right, :scope > .reveal-pop');
@@ -179,6 +193,18 @@
       return 'M ' + a.x + ' ' + a.y + ' C ' + midX + ' ' + a.y + ', ' + midX + ' ' + b.y + ', ' + b.x + ' ' + b.y;
     }
 
+    // Same S-curve as svcCurve but bowed through a midpoint Y instead of X —
+    // used by the hub diagram's stacked (top-to-bottom) narrow layout, where
+    // nodes connect top/bottom rather than left/right.
+    function svcCurveV(a, b) {
+      var midY = (a.y + b.y) / 2;
+      return 'M ' + a.x + ' ' + a.y + ' C ' + a.x + ' ' + midY + ', ' + b.x + ' ' + midY + ', ' + b.x + ' ' + b.y;
+    }
+
+    // Matches the @container (max-width: 560px) breakpoint in style.css that
+    // switches the hub and CRM-wheel diagrams to their stacked layouts.
+    var SVC_STACK_WIDTH = 560;
+
     // Draws a static background line plus a beam path (the one svcTravelSegment
     // animates) along the same curve. Shared by every diagram type so the beam
     // always looks and behaves identically regardless of the layout shape.
@@ -236,13 +262,18 @@
       var outputs = Array.prototype.slice.call(canvas.querySelectorAll('.node--output'));
       if (!trigger || !hub) return;
 
-      var hubIn = svcPoint(hub, 'left', canvasRect);
-      var hubOut = svcPoint(hub, 'right', canvasRect);
-      var triggerOut = svcPoint(trigger, 'right', canvasRect);
+      var stacked = canvasRect.width < SVC_STACK_WIDTH;
+      var inSide = stacked ? 'top' : 'left';
+      var outSide = stacked ? 'bottom' : 'right';
+      var curve = stacked ? svcCurveV : svcCurve;
 
-      var triggerBeam = svcMakeBeam(svg, svcCurve(triggerOut, hubIn));
+      var hubIn = svcPoint(hub, inSide, canvasRect);
+      var hubOut = svcPoint(hub, outSide, canvasRect);
+      var triggerOut = svcPoint(trigger, outSide, canvasRect);
+
+      var triggerBeam = svcMakeBeam(svg, curve(triggerOut, hubIn));
       var outputBeams = outputs.map(function (out) {
-        return svcMakeBeam(svg, svcCurve(hubOut, svcPoint(out, 'left', canvasRect)));
+        return svcMakeBeam(svg, curve(hubOut, svcPoint(out, inSide, canvasRect)));
       });
 
       if (svcReduceMotion) return;
@@ -356,6 +387,25 @@
       var hub = canvas.querySelector('.brain-avatar');
       var nodes = Array.prototype.slice.call(canvas.querySelectorAll('.wheel-node'));
       if (!viewport || !wrap || !hub || !nodes.length) return;
+
+      // Below SVC_STACK_WIDTH the radial layout would scale past the point
+      // its node labels stay legible, so it's swapped for a plain icon+label
+      // grid (see the .is-grid rules in style.css) instead of scaling
+      // further. Mode is tracked separately from _svcWheelBuilt so a device
+      // rotation crossing the threshold tears down whichever mode was built
+      // and lets the other one start clean.
+      var mode = canvas.getBoundingClientRect().width < SVC_STACK_WIDTH ? 'grid' : 'wheel';
+      if (canvas._svcWheelMode !== mode) {
+        if (canvas._svcRelayToken) canvas._svcRelayToken.cancelled = true;
+        wrap.style.cssText = '';
+        viewport.style.cssText = '';
+        nodes.forEach(function (n) { n.style.cssText = ''; n.removeAttribute('data-side'); });
+        svg.innerHTML = '';
+        canvas._svcWheelBuilt = false;
+        canvas._svcWheelMode = mode;
+      }
+      canvas.classList.toggle('is-grid', mode === 'grid');
+      if (mode === 'grid') return;
 
       var DESIGN_W = 1000, DESIGN_H = 760;
       var scale = Math.min(1, canvas.getBoundingClientRect().width / DESIGN_W);
