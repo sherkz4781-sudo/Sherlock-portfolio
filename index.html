@@ -1,0 +1,390 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Sherlock See — Systems &amp; Automation for Business</title>
+<meta name="description" content="I build the backend of your business: websites, CRM, automation, and lead generation built and run like production systems.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=Instrument+Serif:ital@1&family=Anton&display=swap">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<canvas class="smoke-cursor" aria-hidden="true"></canvas>
+
+<header class="site-header">
+  <div class="wrap">
+    <div class="nav-bar row">
+      <a href="#" class="logo">Sherlock See</a>
+      <div class="nav-right">
+        <nav class="nav-links">
+          <a href="#work">Work</a>
+          <a href="#services">Services</a>
+          <a href="#about">About</a>
+          <a href="#contact">Contact</a>
+        </nav>
+        <button class="theme-toggle" id="theme-toggle" aria-label="Toggle theme">
+          <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="4"/><line x1="12" y1="20" x2="12" y2="22"/><line x1="4" y1="12" x2="2" y2="12"/><line x1="22" y1="12" x2="20" y2="12"/><line x1="5" y1="5" x2="6.5" y2="6.5"/><line x1="17.5" y1="17.5" x2="19" y2="19"/><line x1="5" y1="19" x2="6.5" y2="17.5"/><line x1="17.5" y1="6.5" x2="19" y2="5"/></svg>
+          <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.5A9 9 0 1 1 11.5 3a7 7 0 0 0 9.5 9.5z"/></svg>
+        </button>
+        <button class="menu-toggle" id="menu-toggle" aria-label="Open menu" aria-expanded="false">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
+    </div>
+  </div>
+  <nav class="mobile-nav" id="mobile-nav">
+    <a href="#work">Work</a>
+    <a href="#services">Services</a>
+    <a href="#about">About</a>
+    <a href="#contact">Contact</a>
+  </nav>
+</header>
+
+<main>
+
+  <!-- HERO -->
+  <section class="wrap hero">
+    <div class="eyebrow reveal-drop">Systems &amp; Automation for Business</div>
+    <div class="hero-profile">
+      <div class="hero-avatar-slot" aria-hidden="true">
+        <div class="hero-avatar reveal-pop"><img src="images/profile.png" alt=""></div>
+      </div>
+      <p class="hero-sub reveal-right">Websites, CRM, automation, and lead generation &mdash; built and run like production systems, not one-off projects.</p>
+    </div>
+    <h1 class="display hero-head reveal-left">I build the<br>backend of<br>your business.</h1>
+    <div class="hero-foot">
+      <a href="#contact" class="cta-btn reveal-pop">Start a project &rarr;</a>
+    </div>
+  </section>
+
+  <!-- SERVICES -->
+  <section class="wrap svc-section" id="services">
+    <div class="svc-rotated reveal-pop" aria-hidden="true"><span>Services</span></div>
+    <div class="svc-acc" data-reveal-group>
+
+      <div class="svc-acc-row is-open reveal-drop has-diagram" data-svc>
+        <button class="svc-acc-head" data-svc-toggle aria-expanded="true">
+          <span class="svc-acc-idx">01</span>
+          <h3 class="svc-acc-name">Lead Generation</h3>
+          <span class="svc-acc-plus"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></span>
+        </button>
+        <div class="svc-acc-body">
+          <div class="svc-acc-body-inner">
+            <div class="svc-diagram">
+              <div class="canvas canvas--zigzag">
+                <svg class="connectors"></svg>
+                <div class="zigzag-wrap">
+                  <div class="zigzag-row">
+                    <div class="circle-node label-top">
+                      <span class="circle"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s-7-6.5-7-11a7 7 0 0 1 14 0c0 4.5-7 11-7 11z"/><circle cx="12" cy="10" r="2.5"/></svg></span>
+                      <span class="clabel">Lead Source</span>
+                    </div>
+                    <div class="circle-node label-bottom">
+                      <span class="circle"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 21V8l8-5 8 5v13"/><path d="M9 21v-6h6v6"/><path d="M9 12h.01M15 12h.01M9 9h.01M15 9h.01"/></svg></span>
+                      <span class="clabel">Company + Prospect Research</span>
+                    </div>
+                    <div class="circle-node label-top">
+                      <span class="circle"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1" fill="currentColor" stroke="none"/></svg></span>
+                      <span class="clabel">ICP Qualification</span>
+                    </div>
+                    <div class="circle-node label-bottom">
+                      <span class="circle"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 3-1.9 4.1L6 9l4.1 1.9L12 15l1.9-4.1L18 9l-4.1-1.9L12 3z"/><path d="M5 17l-1 2 2-1 2 1-1-2"/><path d="M19 17l-1 2 2-1 2 1-1-2"/></svg></span>
+                      <span class="clabel">Data Enrichment</span>
+                    </div>
+                    <div class="circle-node label-top">
+                      <span class="circle"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg></span>
+                      <span class="clabel">Personalized Outreach</span>
+                    </div>
+                    <div class="circle-node label-bottom">
+                      <span class="circle"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-6l-2 3h-4l-2-3H2"/><path d="M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"/></svg></span>
+                      <span class="clabel">Lead Capture</span>
+                    </div>
+                    <div class="circle-node label-top">
+                      <span class="circle"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16v12H8l-4 4V4z"/></svg></span>
+                      <span class="clabel">CRM Update</span>
+                    </div>
+                    <div class="circle-node label-bottom">
+                      <span class="circle"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7z"/></svg></span>
+                      <span class="clabel">Engagement Tracking</span>
+                    </div>
+                    <div class="circle-node label-top">
+                      <span class="circle"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="7" width="16" height="12" rx="3"/><circle cx="9" cy="13" r="1.3" fill="currentColor" stroke="none"/><circle cx="15" cy="13" r="1.3" fill="currentColor" stroke="none"/><path d="M12 7V4"/><circle cx="12" cy="3" r="1" fill="currentColor" stroke="none"/></svg></span>
+                      <span class="clabel">AI Lead Scoring</span>
+                    </div>
+                    <div class="circle-node label-bottom">
+                      <span class="circle"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 12h8"/><path d="M13 7l5 5-5 5"/><path d="M3 5v14"/></svg></span>
+                      <span class="clabel">Sales Handoff</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <p class="svc-acc-desc">A pipeline that fills itself.</p>
+            <div class="svc-acc-tags">
+              <span>Landing pages built to convert</span>
+              <span>Lead capture &amp; qualification</span>
+              <span>Inbound / outbound funnel setup</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="svc-acc-row reveal-left has-diagram" data-svc>
+        <button class="svc-acc-head" data-svc-toggle aria-expanded="false">
+          <span class="svc-acc-idx">02</span>
+          <h3 class="svc-acc-name">Workflow Automation</h3>
+          <span class="svc-acc-plus"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></span>
+        </button>
+        <div class="svc-acc-body">
+          <div class="svc-acc-body-inner">
+            <div class="svc-diagram">
+              <div class="canvas">
+                <svg class="connectors"></svg>
+                <div class="nodes">
+                  <div class="node node--trigger">
+                    <span class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg></span>
+                    <div><div class="label">New Lead</div><div class="sub">Trigger</div></div>
+                  </div>
+                  <div class="node node--hub">
+                    <span class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="7" width="16" height="12" rx="3"/><circle cx="9" cy="13" r="1.3" fill="currentColor" stroke="none"/><circle cx="15" cy="13" r="1.3" fill="currentColor" stroke="none"/><path d="M12 7V4"/><circle cx="12" cy="3" r="1" fill="currentColor" stroke="none"/></svg></span>
+                    <div><div class="label">AI Model</div><div class="sub">Qualifies &amp; routes automatically</div></div>
+                  </div>
+                  <div class="outputs">
+                    <div class="node node--output">
+                      <span class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M3 10h18"/><path d="M8 2v4"/><path d="M16 2v4"/></svg></span>
+                      <div class="label">Calendar &amp; Email</div>
+                    </div>
+                    <div class="node node--output">
+                      <span class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16v12H8l-4 4V4z"/></svg></span>
+                      <div class="label">Airtable CRM</div>
+                    </div>
+                    <div class="node node--output">
+                      <span class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="8" height="8" rx="1.5"/><rect x="13" y="3" width="8" height="5" rx="1.5"/><rect x="13" y="10" width="8" height="11" rx="1.5"/><rect x="3" y="13" width="8" height="8" rx="1.5"/></svg></span>
+                      <div class="label">Dashboard</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <p class="svc-acc-desc">Manual processes, automated.</p>
+            <div class="svc-acc-tags">
+              <span>Task &amp; approval automation</span>
+              <span>Email &amp; notification triggers</span>
+              <span>Cross-tool integrations</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="svc-acc-row reveal-right has-wheel" data-svc>
+        <button class="svc-acc-head" data-svc-toggle aria-expanded="false">
+          <span class="svc-acc-idx">03</span>
+          <h3 class="svc-acc-name">CRM Setup</h3>
+          <span class="svc-acc-plus"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></span>
+        </button>
+        <div class="svc-acc-body">
+          <div class="svc-acc-body-inner">
+            <div class="svc-diagram">
+              <div class="canvas canvas--wheel">
+                <div class="wheel-viewport">
+                  <div class="wheel-wrap">
+                    <svg class="connectors"></svg>
+                    <div class="brain-avatar">
+                      <img src="images/brain-avatar.png" alt="">
+                      <span class="ai-chip">AI</span>
+                    </div>
+                    <div class="wheel-node" data-idx="0">
+                      <span class="circle"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17l6-6 4 4 8-8"/><path d="M15 7h6v6"/></svg></span>
+                      <div class="label">Sales</div>
+                    </div>
+                    <div class="wheel-node" data-idx="1">
+                      <span class="circle"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M4.2 4.2l2.1 2.1M17.7 17.7l2.1 2.1M2 12h3M19 12h3M4.2 19.8l2.1-2.1M17.7 6.3l2.1-2.1"/></svg></span>
+                      <div class="label">Service</div>
+                    </div>
+                    <div class="wheel-node" data-idx="2">
+                      <span class="circle"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8l9-5 9 5-9 5-9-5z"/><path d="M3 8v8l9 5 9-5V8"/><path d="M12 13v8"/></svg></span>
+                      <div class="label">Orders</div>
+                    </div>
+                    <div class="wheel-node" data-idx="3">
+                      <span class="circle"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="M7 14l4-4 3 3 5-6"/></svg></span>
+                      <div class="label">Analysis</div>
+                    </div>
+                    <div class="wheel-node" data-idx="4">
+                      <span class="circle"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11v2a2 2 0 0 0 2 2h1l3 5V4l-3 5H5a2 2 0 0 0-2 2z"/><path d="M14 8a4 4 0 0 1 0 8"/><path d="M17 5a8 8 0 0 1 0 14"/></svg></span>
+                      <div class="label">Marketing</div>
+                    </div>
+                    <div class="wheel-node" data-idx="5">
+                      <span class="circle"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h13l-3-3M20 17H7l3 3"/></svg></span>
+                      <div class="label">Communication</div>
+                    </div>
+                    <div class="wheel-node" data-idx="6">
+                      <span class="circle"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="13" r="7"/><circle cx="11" cy="13" r="3.2"/><path d="M16 4l3 1-1 3-4 4-3-3z"/></svg></span>
+                      <div class="label">Strategy</div>
+                    </div>
+                    <div class="wheel-node" data-idx="7">
+                      <span class="circle"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 13v-1a8 8 0 0 1 16 0v1"/><rect x="2.5" y="13" width="4" height="6" rx="1.5"/><rect x="17.5" y="13" width="4" height="6" rx="1.5"/><path d="M20 19v1a3 3 0 0 1-3 3h-3"/></svg></span>
+                      <div class="label">Support</div>
+                    </div>
+                    <div class="wheel-node" data-idx="8">
+                      <span class="circle"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="3.5"/><path d="M3 20c0-3.3 2.7-6 6-6s6 2.7 6 6"/><path d="M18 8v6M15 11h6"/></svg></span>
+                      <div class="label">Lead</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <p class="svc-acc-desc">One source of truth for every client.</p>
+            <div class="svc-acc-tags">
+              <span>CRM architecture &amp; data model</span>
+              <span>Pipeline &amp; status tracking</span>
+              <span>Reporting dashboards</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="svc-acc-row reveal-drop" data-svc>
+        <button class="svc-acc-head" data-svc-toggle aria-expanded="false">
+          <span class="svc-acc-idx">04</span>
+          <h3 class="svc-acc-name">Web Design</h3>
+          <span class="svc-acc-plus"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></span>
+        </button>
+        <div class="svc-acc-body">
+          <div class="svc-acc-body-inner">
+            <p class="svc-acc-desc">Sites that run the business, not just represent it.</p>
+            <div class="svc-acc-tags">
+              <span>Marketing &amp; booking sites</span>
+              <span>Responsive, fast, no-bloat builds</span>
+              <span>Built to plug into CRM &amp; automation</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <a href="#work" class="svc-cta reveal-pop">See it in action &rarr;</a>
+    </div>
+  </section>
+
+  <div class="wrap scroll-hint">
+    <div class="eyebrow">Scroll for work &amp; contact &darr;</div>
+  </div>
+
+  <!-- ABOUT -->
+  <section class="wrap section-head" id="about">
+    <div class="neu-panel reveal-pop">
+      <div class="eyebrow" style="margin-bottom:28px;">About</div>
+      <div class="about-grid">
+        <h2 class="display" style="font-size:52px;">Independent<br>systems<br>builder.</h2>
+        <div>
+          <p class="mission-line">On a mission to give small businesses the same systems the big players run on.</p>
+          <p class="about-body">
+            I'm <b>Sherlock See</b> &mdash; I design and build the operational backbone of small businesses: the site that brings leads in, the CRM that keeps them from falling through the cracks, and the automations that keep the whole thing running without babysitting.
+            <br><br>
+            I build hands-on, and I run what I build in my own business first &mdash; not theory, not templates.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PROCESS -->
+  <section class="wrap section-head">
+    <div class="proc-block reveal-pop">
+      <div class="proc-row">
+        <div class="proc-list" data-reveal-group>
+          <div class="proc-eyebrow">How I Work</div>
+
+          <div class="proc-item reveal-left">
+            <div class="proc-num">01</div>
+            <div>
+              <h3 class="proc-title">Discover</h3>
+              <p class="proc-desc">Map the real workflow, not the ideal one.</p>
+            </div>
+          </div>
+          <div class="proc-item reveal-right">
+            <div class="proc-num">02</div>
+            <div>
+              <h3 class="proc-title">Build</h3>
+              <p class="proc-desc">Ship a working site or system, not a mockup.</p>
+            </div>
+          </div>
+          <div class="proc-item reveal-drop">
+            <div class="proc-num">03</div>
+            <div>
+              <h3 class="proc-title">Automate</h3>
+              <p class="proc-desc">Wire up the repetitive parts so they run themselves.</p>
+            </div>
+          </div>
+          <div class="proc-item reveal-left">
+            <div class="proc-num">04</div>
+            <div>
+              <h3 class="proc-title">Handoff</h3>
+              <p class="proc-desc">You own it outright &mdash; I document everything.</p>
+            </div>
+          </div>
+        </div>
+        <div class="proc-rotated reveal-pop" aria-hidden="true"><span>Process</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CASE STUDY -->
+  <section class="wrap section-head" id="work">
+    <div class="neu-panel reveal-pop">
+      <div class="cs-tag reveal-right">Case Study / 01</div>
+      <h2 class="display cs-title reveal-drop">Primo Care Cleaning Services</h2>
+      <div class="cs-status reveal-pop"><span class="dot-live"></span> Built &amp; running in production</div>
+
+      <div class="cs-rows" data-reveal-group>
+        <div class="reveal-left">
+          <div class="cs-row-label">Problem</div>
+          <p class="cs-row-body">Manual booking and scheduling was eating hours every week &mdash; no system, just texts and a shared calendar.</p>
+        </div>
+        <div class="reveal-right">
+          <div class="cs-row-label">Built</div>
+          <p class="cs-row-body">A full booking + CRM system: client-facing booking and cancel/reschedule flows, an Airtable-backed CRM, and Google Calendar / Gmail automation for confirmations.</p>
+        </div>
+        <div class="reveal-drop">
+          <div class="cs-row-label">Outcome</div>
+          <p class="cs-row-body">Built for my own business. Staff and admin run scheduling and reporting from it today &mdash; live, not a demo.</p>
+        </div>
+      </div>
+
+      <div class="workflow-scroll">
+        <div class="workflow">
+          <div class="workflow-line"><span class="workflow-glow"></span></div>
+          <div class="workflow-items" data-reveal-group>
+            <span class="workflow-label reveal-left"><span class="workflow-dot"></span>Leads</span>
+            <span class="workflow-label reveal-left"><span class="workflow-dot"></span>Outreach</span>
+            <span class="workflow-label reveal-left"><span class="workflow-dot"></span>Onboarding</span>
+            <span class="workflow-label reveal-left"><span class="workflow-dot"></span>Client booking site</span>
+            <span class="workflow-label reveal-left"><span class="workflow-dot"></span>Airtable CRM</span>
+            <span class="workflow-label reveal-left"><span class="workflow-dot"></span>Calendar &amp; Gmail automation</span>
+            <span class="workflow-label reveal-left"><span class="workflow-dot"></span>Company Dashboard</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTACT -->
+  <section class="wrap section-head contact-head-wrap" id="contact">
+    <div class="eyebrow reveal-right" style="margin-bottom:28px;">Contact</div>
+    <h2 class="display contact-head reveal-drop">Let's build something that runs.</h2>
+    <div class="row contact-row">
+      <a href="mailto:sherkz4781@gmail.com" class="contact-email reveal-pop">sherkz4781@gmail.com</a>
+    </div>
+  </section>
+
+</main>
+
+<footer class="wrap footer-row row">
+  <div>&copy; 2026 Sherlock See. All systems, no fluff.</div>
+  <div>Working remotely, worldwide</div>
+</footer>
+
+<script src="js/main.js"></script>
+</body>
+</html>

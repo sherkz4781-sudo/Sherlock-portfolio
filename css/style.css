@@ -1,0 +1,942 @@
+:root {
+  --ink: #2A2420;
+  --paper: #E7E4DE;
+  --muted: #8A7C6C;
+  --accent: #C1531B;
+  --shadow-dark: #C7C3BA;
+  --shadow-light: #FFFFFF;
+  --proc-bg: #2A2420;
+  --proc-text: #F2ECE2;
+  --proc-muted: rgba(242, 236, 226, 0.62);
+  --proc-shadow-dark: #17130F;
+  --proc-shadow-light: #3D362E;
+}
+
+[data-theme="dark"] {
+  --ink: #EFE6D8;
+  --paper: #242019;
+  --muted: #9C8E7C;
+  --shadow-dark: #151210;
+  --shadow-light: #332D24;
+  --proc-bg: #EFE6D8;
+  --proc-text: #221D17;
+  --proc-muted: rgba(34, 29, 23, 0.6);
+  --proc-shadow-dark: #C9BC9F;
+  --proc-shadow-light: #FFFFFF;
+}
+
+* { box-sizing: border-box; }
+
+html { scroll-behavior: smooth; overflow-x: hidden; }
+
+body {
+  margin: 0;
+  overflow-x: hidden;
+  font-family: 'Inter', system-ui, sans-serif;
+  background: var(--paper);
+  color: var(--ink);
+  transition: background 0.3s ease, color 0.3s ease;
+}
+
+a { color: var(--ink); text-decoration: none; }
+a:hover { color: var(--accent); }
+
+.wrap { padding: 0 280px; }
+
+.row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.eyebrow {
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.display {
+  font-family: 'Space Grotesk', system-ui, sans-serif;
+  font-weight: 600;
+  text-transform: uppercase;
+  line-height: 0.96;
+  letter-spacing: -0.01em;
+  margin: 0;
+}
+
+/* ---------- Header / nav ---------- */
+
+.site-header { position: relative; }
+
+.nav-bar {
+  margin: 28px 0 0;
+  padding: 18px 32px;
+  border-radius: 22px;
+  background: var(--paper);
+  box-shadow: 9px 9px 18px var(--shadow-dark), -9px -9px 18px var(--shadow-light);
+}
+
+.logo {
+  font-family: 'Space Grotesk', sans-serif;
+  font-weight: 700;
+  font-size: 17px;
+  letter-spacing: 0.02em;
+}
+
+.nav-right { display: flex; align-items: center; gap: 40px; }
+
+.nav-links { display: flex; gap: 40px; }
+.nav-links a {
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.theme-toggle {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  border: none;
+  background: var(--paper);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--ink);
+  cursor: pointer;
+  padding: 0;
+  flex-shrink: 0;
+  box-shadow: 6px 6px 12px var(--shadow-dark), -6px -6px 12px var(--shadow-light);
+  transition: box-shadow 0.25s ease, color 0.25s ease;
+}
+[data-theme="dark"] .theme-toggle {
+  box-shadow: inset 4px 4px 8px var(--shadow-dark), inset -4px -4px 8px var(--shadow-light);
+}
+.theme-toggle:hover { color: var(--accent); }
+.theme-toggle svg { width: 18px; height: 18px; }
+.theme-toggle .icon-moon { display: none; }
+[data-theme="dark"] .theme-toggle .icon-sun { display: none; }
+[data-theme="dark"] .theme-toggle .icon-moon { display: block; }
+
+.menu-toggle {
+  display: none;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  border: none;
+  background: var(--paper);
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 5px;
+  cursor: pointer;
+  box-shadow: 6px 6px 12px var(--shadow-dark), -6px -6px 12px var(--shadow-light);
+  flex-shrink: 0;
+}
+.menu-toggle span { display: block; width: 16px; height: 2px; background: var(--ink); border-radius: 2px; }
+
+.mobile-nav {
+  display: none;
+  flex-direction: column;
+  gap: 4px;
+  margin: 12px 24px 0;
+  padding: 12px;
+  border-radius: 18px;
+  background: var(--paper);
+  box-shadow: inset 5px 5px 10px var(--shadow-dark), inset -5px -5px 10px var(--shadow-light);
+}
+.mobile-nav.is-open { display: flex; }
+.mobile-nav a {
+  padding: 12px 16px;
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+/* ---------- Hero ---------- */
+
+.hero { position: relative; z-index: 0; padding-top: 104px; padding-bottom: 0; text-align: right; }
+.hero .eyebrow { margin-bottom: 24px; }
+.hero-head { position: relative; font-size: 104px; max-width: 760px; margin-left: auto; margin-top: 24px; }
+.hero-foot { margin-top: 56px; }
+.hero-profile { position: relative; }
+.hero-avatar-slot {
+  width: 140px;
+  height: 140px;
+  margin: 0 0 20px;
+  z-index: -1;
+}
+@media (min-width: 1700px) {
+  .hero-avatar-slot {
+    width: 360px;
+    height: 360px;
+    margin: 0 0 24px;
+  }
+  .hero-profile {
+    position: absolute;
+    left: 280px;
+    top: 142px;
+    width: 360px;
+    z-index: 1;
+  }
+}
+.hero-avatar {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background: var(--paper);
+  box-shadow: 10px 10px 20px var(--shadow-dark), -10px -10px 20px var(--shadow-light);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+.hero-avatar::before {
+  content: '';
+  position: absolute;
+  inset: 12px;
+  border-radius: 50%;
+  box-shadow: inset 5px 5px 10px var(--shadow-dark), inset -5px -5px 10px var(--shadow-light);
+  pointer-events: none;
+}
+.hero-avatar img {
+  position: relative;
+  z-index: 1;
+  width: calc(100% - 24px);
+  height: calc(100% - 24px);
+  border-radius: 50%;
+  object-fit: cover;
+  display: block;
+}
+.hero-sub {
+  font-size: 18px;
+  line-height: 1.5;
+  max-width: 460px;
+  margin: 0;
+  color: var(--muted);
+  text-align: left;
+}
+
+.cta-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--ink);
+  padding: 16px 30px;
+  border-radius: 999px;
+  background: var(--paper);
+  box-shadow: 8px 8px 16px var(--shadow-dark), -8px -8px 16px var(--shadow-light);
+  transition: box-shadow 0.25s ease, color 0.25s ease;
+  border: none;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+.cta-btn:hover {
+  color: var(--accent);
+  box-shadow: inset 5px 5px 10px var(--shadow-dark), inset -5px -5px 10px var(--shadow-light);
+}
+
+/* ---------- Services ---------- */
+
+.svc-section { display: flex; gap: 56px; align-items: stretch; padding: 64px 280px 80px; }
+.svc-rotated {
+  flex-shrink: 0;
+  width: 190px;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  padding: 28px 0;
+  border-radius: 28px;
+  background: var(--paper);
+  box-shadow: 10px 10px 20px var(--shadow-dark), -10px -10px 20px var(--shadow-light);
+}
+.svc-rotated span {
+  writing-mode: vertical-rl;
+  transform: rotate(180deg);
+  font-family: 'Anton', 'Arial Narrow', sans-serif;
+  font-weight: 400;
+  font-size: 176px;
+  text-transform: uppercase;
+  white-space: nowrap;
+  color: var(--muted);
+  text-shadow: 3px 3px 5px var(--shadow-dark), -3px -3px 5px var(--shadow-light);
+}
+.svc-acc { flex: 1 1 auto; min-width: 0; display: flex; flex-direction: column; gap: 20px; }
+.svc-acc-row {
+  border-radius: 22px;
+  background: var(--paper);
+  box-shadow: 8px 8px 16px var(--shadow-dark), -8px -8px 16px var(--shadow-light);
+  transition: box-shadow 0.3s ease;
+  padding: 0 32px;
+}
+.svc-acc-row.is-open {
+  box-shadow: inset 6px 6px 12px var(--shadow-dark), inset -6px -6px 12px var(--shadow-light);
+}
+.svc-acc-head {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  width: 100%;
+  padding: 24px 0;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font: inherit;
+  color: inherit;
+  text-align: left;
+}
+.svc-acc-idx {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 44px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: var(--accent);
+  flex-shrink: 0;
+  width: 74px;
+  line-height: 1;
+}
+.svc-acc-name {
+  font-family: 'Inter', sans-serif;
+  font-weight: 700;
+  font-size: 26px;
+  letter-spacing: 0.01em;
+  text-transform: uppercase;
+  flex: 1 1 auto;
+  margin: 0;
+  transition: color 0.2s ease;
+}
+.svc-acc-row.is-open .svc-acc-name { color: var(--accent); }
+.svc-acc-plus {
+  width: 36px;
+  height: 36px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--ink);
+  background: var(--paper);
+  box-shadow: 4px 4px 8px var(--shadow-dark), -4px -4px 8px var(--shadow-light);
+  transition: transform 0.3s ease, color 0.2s ease, box-shadow 0.3s ease;
+}
+.svc-acc-plus svg { width: 16px; height: 16px; }
+.svc-acc-row.is-open .svc-acc-plus {
+  transform: rotate(45deg);
+  color: var(--accent);
+  box-shadow: inset 3px 3px 6px var(--shadow-dark), inset -3px -3px 6px var(--shadow-light);
+}
+.svc-acc-body { max-height: 0; overflow: hidden; opacity: 0; transition: max-height 0.3s ease, opacity 0.25s ease; }
+.svc-acc-row.is-open .svc-acc-body { max-height: 200px; opacity: 1; }
+.svc-acc-body-inner { padding: 0 0 28px 98px; }
+.svc-acc-desc { font-size: 14px; line-height: 1.5; color: var(--muted); margin: 0 0 12px; }
+.svc-acc-tags { display: flex; flex-wrap: wrap; gap: 8px 24px; font-size: 12.5px; color: var(--ink); }
+
+/* ---------- Service diagrams (accordion illustrations) ---------- */
+.svc-acc-row.has-diagram.is-open .svc-acc-body { max-height: 480px; }
+/* The wheel is taller than the other two diagrams (760px design height, plus
+   the description/tags below it) — a dedicated class rather than reusing
+   has-diagram so this override doesn't depend on stylesheet source order
+   against the 480px rule above. */
+.svc-acc-row.has-wheel.is-open .svc-acc-body { max-height: 960px; }
+.svc-diagram { margin: 4px 0 22px; }
+
+.svc-diagram .canvas {
+  position: relative;
+  border-radius: 20px;
+  padding: 30px 24px;
+  background-image: radial-gradient(var(--shadow-dark) 1px, transparent 1px);
+  background-size: 22px 22px;
+  background-position: -6px -6px;
+  box-shadow: inset 4px 4px 10px var(--shadow-dark), inset -4px -4px 10px var(--shadow-light);
+}
+.svc-diagram svg.connectors { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
+.svc-diagram .connector-line { fill: none; stroke: var(--shadow-dark); stroke-width: 2; opacity: 0.9; }
+.svc-diagram .connector-beam {
+  fill: none; stroke: var(--accent); stroke-width: 4; stroke-linecap: round;
+  filter: drop-shadow(0 0 3px var(--accent)) drop-shadow(0 0 9px var(--accent));
+}
+.svc-diagram .connector-joint { fill: var(--shadow-dark); opacity: 0.9; }
+
+/* Hub diagram (Workflow Automation): trigger -> AI model -> parallel outputs */
+.svc-diagram .nodes {
+  position: relative;
+  display: grid;
+  grid-template-columns: 1fr 1.35fr 1fr;
+  align-items: center;
+  gap: 16px;
+  min-height: 230px;
+}
+.svc-diagram .node {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  justify-self: start;
+  background: var(--paper);
+  border-radius: 16px;
+  padding: 14px 18px;
+  box-shadow: 7px 7px 14px var(--shadow-dark), -7px -7px 14px var(--shadow-light);
+}
+.svc-diagram .node .icon {
+  flex-shrink: 0;
+  width: 38px; height: 38px;
+  border-radius: 11px;
+  display: flex; align-items: center; justify-content: center;
+  background: var(--paper);
+  box-shadow: inset 3px 3px 6px var(--shadow-dark), inset -3px -3px 6px var(--shadow-light);
+  color: var(--accent);
+}
+.svc-diagram .node .icon svg { width: 19px; height: 19px; }
+.svc-diagram .node .label { font-family: 'Space Grotesk', sans-serif; font-size: 13.5px; font-weight: 600; }
+.svc-diagram .node .sub { font-size: 11px; color: var(--muted); margin-top: 2px; }
+.svc-diagram .node--trigger { grid-column: 1; }
+.svc-diagram .node--hub { grid-column: 2; justify-self: center; padding: 18px 24px; gap: 14px; }
+.svc-diagram .node--hub .icon { width: 44px; height: 44px; }
+.svc-diagram .node--hub .icon svg { width: 22px; height: 22px; }
+.svc-diagram .node--hub .label { font-size: 15px; }
+.svc-diagram .outputs { grid-column: 3; display: flex; flex-direction: column; gap: 22px; justify-self: end; }
+.svc-diagram .node--output { padding: 11px 16px; }
+.svc-diagram .node--output .icon { width: 32px; height: 32px; }
+.svc-diagram .node--output .icon svg { width: 16px; height: 16px; }
+.svc-diagram .node--output .label { font-size: 12.5px; }
+
+/* CRM wheel (CRM Setup): a Brain Avatar hub — framed like .hero-avatar
+   (raised outer ring via box-shadow, inset inner ring via ::before,
+   object-fit:cover img) so it reuses the site's established avatar-framing
+   language — with 9 circle nodes on a ring around it. Sized for the wheel
+   composition specifically (202px hub, 96px nodes); see js/main.js's
+   svcLayoutWheel for how the whole thing scales responsively as one unit. */
+.svc-diagram .canvas--radial { padding: 40px 24px; }
+.svc-diagram .radial-wrap { position: relative; z-index: 1; height: 360px; display: flex; align-items: center; justify-content: center; }
+.svc-diagram .canvas--wheel { padding: 40px 24px; }
+.svc-diagram .wheel-viewport { position: relative; width: 100%; overflow: visible; }
+.svc-diagram .wheel-wrap { position: absolute; left: 50%; top: 0; width: 1000px; height: 760px; transform-origin: top center; }
+.svc-diagram .brain-avatar {
+  /* Self-centering (absolute + translate) rather than relying on a flex
+     parent to center it — the wheel's .wheel-wrap is a fixed-size absolute
+     canvas (trig-positioned children), not a flex container, so without
+     this the avatar just sat at the wrap's default top-left flow position
+     instead of at its true center. Self-centering works in both contexts
+     (this one, and the standalone hub preview's flex-centered .radial-wrap),
+     so it's the more robust default regardless of what kind of parent it's in. */
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  width: 202px; height: 202px;
+  border-radius: 50%;
+  background: var(--paper);
+  box-shadow: 13px 13px 27px var(--shadow-dark), -13px -13px 27px var(--shadow-light);
+  display: flex; align-items: center; justify-content: center;
+  overflow: hidden;
+}
+.svc-diagram .brain-avatar::before {
+  content: '';
+  position: absolute;
+  inset: 7px;
+  border-radius: 50%;
+  box-shadow: inset 3.5px 3.5px 8px var(--shadow-dark), inset -3.5px -3.5px 8px var(--shadow-light);
+  pointer-events: none;
+  z-index: 1;
+}
+.svc-diagram .brain-avatar img {
+  position: relative;
+  width: calc(100% - 14px);
+  height: calc(100% - 14px);
+  border-radius: 50%;
+  object-fit: cover;
+  /* images/brain-avatar.png is pre-cropped (via images/brain-avatar-original.png,
+     kept as a backup) to a 780x780 square centered on the brain's actual alpha
+     bounding box, not the source canvas's geometric center — the original
+     upload had asymmetric transparent margin (112/148px left/right, 146/129px
+     top/bottom) so a plain centered crop/scale left the brain visibly
+     off-center in the tile. No CSS-side scale/position hack needed now that
+     the file itself is correctly centered and already tightly cropped. */
+  display: block;
+}
+.svc-diagram .brain-avatar .ai-chip {
+  position: absolute;
+  z-index: 2;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  width: 70px; height: 58px;
+  border-radius: 12px;
+  background: var(--paper);
+  /* Teal border matches the "AI" text and .smoke-cursor's own hue family
+     (185-215, driven from main.js) — the chip is fully stationary (no
+     animation at all); the glow-pulse lives on the brain avatar instead. */
+  border: 2px solid hsl(200, 80%, 48%);
+  box-shadow: 2px 2px 6px var(--shadow-dark), -2px -2px 6px var(--shadow-light);
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'Space Grotesk', sans-serif;
+  font-weight: 700;
+  font-size: 22px;
+  letter-spacing: 0.02em;
+  color: hsl(200, 80%, 48%);
+}
+.svc-diagram .wheel-node {
+  position: absolute;
+  z-index: 1;
+  width: 96px; height: 96px;
+  transform: translate(-50%, -50%);
+}
+.svc-diagram .wheel-node .circle {
+  width: 100%; height: 100%;
+  border-radius: 50%;
+  background: var(--paper);
+  box-shadow: 9px 9px 20px var(--shadow-dark), -9px -9px 20px var(--shadow-light);
+  display: flex; align-items: center; justify-content: center;
+  color: var(--accent);
+}
+.svc-diagram .wheel-node .circle svg { width: 39px; height: 39px; }
+.svc-diagram .wheel-node .label {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  white-space: nowrap;
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--ink);
+}
+/* Right-half nodes: label to the right, text reads outward. Left-half:
+   label to the left, text hugs the circle. Sales is the one node with no
+   natural left/right lean (sits dead-center-top), nudged to its circle's
+   ~1 o'clock position instead of the generic mid-height placement. */
+.svc-diagram .wheel-node[data-side="right"] .label { left: calc(100% + 12px); text-align: left; }
+.svc-diagram .wheel-node[data-side="left"] .label { right: calc(100% + 12px); text-align: right; }
+.svc-diagram .wheel-node[data-idx="0"] .label { top: 20%; left: calc(100% + 2px); }
+
+/* Sequential pipeline (Lead Generation): single row, alternating labels */
+.svc-diagram .canvas--zigzag { padding: 46px 20px; }
+.svc-diagram .zigzag-wrap { position: relative; z-index: 1; }
+.svc-diagram .zigzag-row { display: flex; gap: 6px; }
+.svc-diagram .circle-node {
+  flex: 1 1 0;
+  min-width: 0;
+  display: grid;
+  grid-template-rows: 36px auto 36px;
+  align-items: center;
+  justify-items: center;
+  gap: 4px;
+  text-align: center;
+}
+.svc-diagram .circle-node .circle {
+  position: relative;
+  z-index: 1;
+  grid-row: 2;
+  flex-shrink: 0;
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  background: var(--paper);
+  box-shadow: 7px 7px 14px var(--shadow-dark), -7px -7px 14px var(--shadow-light);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--accent);
+}
+.svc-diagram .circle-node .circle svg { width: 21px; height: 21px; }
+.svc-diagram .circle-node .clabel {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 1.25;
+  color: var(--ink);
+  max-width: 92px;
+}
+.svc-diagram .circle-node.label-top .clabel { grid-row: 1; align-self: end; }
+.svc-diagram .circle-node.label-bottom .clabel { grid-row: 3; align-self: start; }
+
+/* Tile flash-on-arrival is driven entirely by element.animate() in main.js
+   (svcFlashOnce) rather than a CSS @keyframes + class, so each flash is a
+   fresh one-shot animation triggered exactly when its incoming beam's
+   Animation.onfinish fires — see the comment on the relay loops in
+   svcLayoutChain/svcLayoutHub for why that ordering matters. */
+
+@media (prefers-reduced-motion: reduce) {
+  .svc-diagram .connector-beam { animation: none !important; opacity: 0; }
+}
+/* The accordion column's real available width is viewport minus .svc-section's
+   side padding, the rotated "SERVICES" sidebar, and its gap — not the raw
+   viewport width. This threshold was originally 1650px, picked back when
+   side margins stayed at the full 280px all the way down to 1024px (a
+   "dead zone" — no diagrams AND no reclaimed width). Once that margin tier
+   was fixed below, the diagrams were re-tested directly at each real
+   breakpoint rather than re-guessing a number: 1024px viewport (745px
+   available column) — all three diagrams (chain, hub, wheel) render
+   cleanly, confirmed via screenshot, nothing overlapping or clipped. 800px
+   viewport (521px available) — genuinely broken (chain's circles overlap
+   each other, the hub's output cards get clipped). So the real floor sits
+   right at the site's own existing 1024px tablet breakpoint, not somewhere
+   in the 1024-1650px range that used to be blanket-hidden. Diagrams now
+   show for the entire tablet tier and up; only truly hide below it. */
+@media (max-width: 1023px) {
+  .svc-diagram { display: none; }
+}
+@media (max-width: 1650px) {
+  /* Side margins used to stay at the full 280px desktop value all the way
+     down to 1024px, even though diagrams used to vanish here at 1650px —
+     a "worst of both worlds" dead zone covering most real split-screen
+     widths. This tier only touches horizontal inset (.wrap/.svc-section/
+     .scroll-hint's side padding), not type sizes, gaps, or the sidebar
+     width — those stay desktop-sized until the existing 1024px tier. */
+  .wrap { padding: 0 140px; }
+  .svc-section { padding: 64px 140px 80px; }
+  .scroll-hint { padding: 8px 140px 36px; }
+}
+.svc-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  align-self: flex-start;
+  margin-top: 12px;
+  padding: 16px 30px;
+  border-radius: 999px;
+  background: var(--paper);
+  box-shadow: 8px 8px 16px var(--shadow-dark), -8px -8px 16px var(--shadow-light);
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ink);
+  transition: box-shadow 0.25s ease, color 0.25s ease;
+}
+.svc-cta:hover {
+  color: var(--accent);
+  box-shadow: inset 5px 5px 10px var(--shadow-dark), inset -5px -5px 10px var(--shadow-light);
+}
+
+.scroll-hint { padding: 8px 280px 36px; }
+
+/* ---------- Section panels ---------- */
+
+.section-head { padding-top: 56px; padding-bottom: 56px; }
+
+.neu-panel {
+  border-radius: 28px;
+  background: var(--paper);
+  box-shadow: 10px 10px 20px var(--shadow-dark), -10px -10px 20px var(--shadow-light);
+  padding: 56px;
+}
+
+/* ---------- About ---------- */
+
+.about-grid { display: grid; grid-template-columns: 5fr 7fr; gap: 64px; }
+.mission-line {
+  font-family: 'Instrument Serif', Georgia, serif;
+  font-style: italic;
+  font-size: 34px;
+  line-height: 1.35;
+  margin: 0 0 24px;
+}
+.about-body { font-size: 18px; line-height: 1.6; margin: 0; }
+.about-body b { color: var(--ink); }
+
+/* ---------- Case study ---------- */
+
+.cs-tag {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--accent);
+  margin-bottom: 16px;
+}
+.cs-title { font-size: 44px; margin: 0 0 24px; }
+.cs-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin-bottom: 36px;
+  border-radius: 999px;
+  padding: 10px 18px;
+  background: var(--paper);
+  box-shadow: 5px 5px 10px var(--shadow-dark), -5px -5px 10px var(--shadow-light);
+  transform: rotate(-2deg);
+}
+.cs-status .dot-live { width: 7px; height: 7px; background: var(--accent); border-radius: 50%; display: inline-block; }
+.cs-rows { display: grid; grid-template-columns: repeat(3, 1fr); gap: 40px; margin-bottom: 40px; }
+.cs-row-label { font-size: 12px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); margin-bottom: 10px; }
+.cs-row-body { font-size: 15px; line-height: 1.55; margin: 0; }
+/* ---------- Workflow line ---------- */
+
+.workflow-scroll {
+  overflow-x: auto;
+  margin: 0 -4px;
+  padding: 4px;
+  -webkit-overflow-scrolling: touch;
+}
+.workflow-scroll::-webkit-scrollbar { height: 6px; }
+.workflow-scroll::-webkit-scrollbar-thumb { background: var(--shadow-dark); border-radius: 3px; }
+
+.workflow {
+  --flow-duration: 12s;
+  position: relative;
+  width: max-content;
+  margin: 0 auto;
+}
+
+.workflow-line {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  height: 2px;
+  border-radius: 2px;
+  overflow: hidden;
+  box-shadow: inset 1px 1px 2px var(--shadow-dark), inset -1px -1px 2px var(--shadow-light);
+}
+.workflow-glow {
+  position: absolute;
+  top: 0;
+  left: -25%;
+  width: 25%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, var(--accent), transparent);
+  animation: workflow-flow var(--flow-duration) linear infinite;
+}
+@keyframes workflow-flow {
+  from { left: -25%; }
+  to { left: 100%; }
+}
+
+.workflow-items {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  position: relative;
+  z-index: 1;
+  padding: 24px 2px;
+}
+.workflow-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 13px;
+  white-space: nowrap;
+  padding: 10px 18px;
+  border-radius: 999px;
+  background: var(--paper);
+  box-shadow: 4px 4px 8px var(--shadow-dark), -4px -4px 8px var(--shadow-light);
+}
+.workflow-dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  background: var(--accent);
+  transform: scale(1);
+  box-shadow: 1px 1px 2px var(--shadow-dark);
+}
+.workflow-dot.pulse-sync {
+  animation-name: workflow-dot-pulse;
+  animation-timing-function: ease-out;
+  animation-iteration-count: infinite;
+}
+@keyframes workflow-dot-pulse {
+  0% { transform: scale(1); box-shadow: 1px 1px 2px var(--shadow-dark); }
+  4% { transform: scale(1.9); box-shadow: 0 0 10px 3px var(--accent); }
+  16% { transform: scale(1); box-shadow: 1px 1px 2px var(--shadow-dark); }
+  100% { transform: scale(1); box-shadow: 1px 1px 2px var(--shadow-dark); }
+}
+
+/* ---------- Process ---------- */
+
+.proc-block {
+  border-radius: 28px;
+  background: var(--proc-bg);
+  color: var(--proc-text);
+  box-shadow: 12px 12px 24px var(--shadow-dark), -12px -12px 24px var(--shadow-light);
+  padding: 8px 0;
+}
+.proc-row { display: flex; gap: 56px; align-items: stretch; padding: 48px 56px; }
+.proc-list { flex: 1 1 auto; display: flex; flex-direction: column; gap: 20px; }
+.proc-eyebrow { font-size: 12px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: var(--proc-muted); margin-bottom: 8px; }
+.proc-item {
+  display: flex;
+  gap: 28px;
+  align-items: center;
+  padding: 22px 28px;
+  border-radius: 20px;
+  box-shadow: inset 5px 5px 10px var(--proc-shadow-dark), inset -5px -5px 10px var(--proc-shadow-light);
+}
+.proc-num {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 40px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: var(--accent);
+  flex-shrink: 0;
+  width: 74px;
+  line-height: 1;
+  text-align: center;
+}
+.proc-title { font-family: 'Inter', sans-serif; font-size: 26px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.01em; margin: 0 0 6px; color: var(--proc-text); }
+.proc-desc { font-size: 14px; line-height: 1.5; color: var(--proc-muted); margin: 0; max-width: 460px; }
+.proc-rotated {
+  flex-shrink: 0;
+  width: 200px;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  padding: 24px 0;
+  border-radius: 24px;
+  background: var(--proc-bg);
+  box-shadow: 8px 8px 16px var(--proc-shadow-dark), -8px -8px 16px var(--proc-shadow-light);
+}
+.proc-rotated span {
+  writing-mode: vertical-rl;
+  transform: rotate(180deg);
+  font-family: 'Anton', 'Arial Narrow', sans-serif;
+  font-weight: 400;
+  font-size: 176px;
+  text-transform: uppercase;
+  white-space: nowrap;
+  color: var(--proc-muted);
+  text-shadow: 3px 3px 5px var(--proc-shadow-dark), -3px -3px 5px var(--proc-shadow-light);
+}
+
+/* ---------- Contact ---------- */
+
+.contact-head { font-size: 72px; max-width: 900px; }
+.contact-row { margin-top: 48px; align-items: center; gap: 32px; justify-content: flex-start; }
+.contact-email {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 24px;
+  font-weight: 600;
+  display: inline-flex;
+  padding: 18px 32px;
+  border-radius: 999px;
+  background: var(--paper);
+  box-shadow: 8px 8px 16px var(--shadow-dark), -8px -8px 16px var(--shadow-light);
+  transition: box-shadow 0.25s ease, color 0.25s ease;
+}
+.contact-email:hover {
+  color: var(--accent);
+  box-shadow: inset 5px 5px 10px var(--shadow-dark), inset -5px -5px 10px var(--shadow-light);
+}
+
+.footer-row { padding-top: 40px; padding-bottom: 40px; font-size: 12px; color: var(--muted); }
+
+/* ---------- Scroll reveal ---------- */
+
+.reveal-drop, .reveal-left, .reveal-right, .reveal-pop {
+  opacity: 0;
+  transition: opacity 2.6s cubic-bezier(0.16, 1, 0.3, 1), transform 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.reveal-drop { transform: translateY(-80px); }
+.reveal-left { transform: translateX(-110px); }
+.reveal-right { transform: translateX(110px); }
+.reveal-pop { transform: translateY(24px) scale(0.96); }
+
+.reveal-drop.in-view, .reveal-left.in-view, .reveal-right.in-view, .reveal-pop.in-view {
+  opacity: 1;
+  transform: none;
+}
+
+@media (max-width: 720px) {
+  .reveal-drop { transform: translateY(-60px); }
+  .reveal-left { transform: translateX(-70px); }
+  .reveal-right { transform: translateX(70px); }
+  .reveal-drop, .reveal-left, .reveal-right, .reveal-pop {
+    transition-duration: 2.3s, 1.05s;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal-drop, .reveal-left, .reveal-right, .reveal-pop { transition: none !important; opacity: 1 !important; transform: none !important; }
+  .workflow-glow, .workflow-dot.pulse-sync { animation: none !important; }
+}
+
+/* ================= Tablet ================= */
+
+@media (max-width: 1024px) {
+  .wrap { padding: 0 56px; }
+  .nav-bar { margin: 24px 0 0; }
+  .svc-section { padding: 56px 56px 72px; gap: 32px; }
+  .scroll-hint { padding: 8px 56px 32px; }
+  .svc-rotated { width: 120px; }
+  .svc-rotated span, .proc-rotated span { font-size: 110px; }
+  .hero-head { font-size: 76px; }
+  .neu-panel { padding: 40px; }
+  .cs-rows { grid-template-columns: 1fr 1fr; }
+  .proc-row { padding: 40px; gap: 32px; }
+  .contact-head { font-size: 52px; }
+}
+
+/* ================= Mobile ================= */
+
+@media (max-width: 720px) {
+  .wrap { padding: 0 24px; }
+  .nav-bar { margin: 20px 0 0; padding: 14px 20px; }
+  .nav-links { display: none; }
+  .menu-toggle { display: flex; }
+  .theme-toggle { width: 40px; height: 40px; }
+
+  .hero { padding-top: 56px; text-align: left; }
+  .hero-avatar-slot {
+    position: static;
+    width: 110px;
+    height: 110px;
+    margin: 0 0 16px;
+  }
+  .hero-head { font-size: 44px; max-width: none; margin-left: 0; margin-top: 16px; }
+  .hero-foot { margin-top: 32px; }
+  .hero-sub { max-width: none; font-size: 15px; margin-bottom: 0; }
+
+  .svc-section { flex-direction: column; padding: 40px 24px 56px; gap: 16px; }
+  .svc-rotated { display: none; }
+  .svc-acc { gap: 16px; }
+  .svc-acc-row { padding: 0 20px; }
+  .svc-acc-idx { font-size: 32px; width: 48px; }
+  .svc-acc-name { font-size: 18px; }
+  .svc-acc-body-inner { padding-left: 64px; }
+  .scroll-hint { padding: 8px 24px 24px; }
+
+  .section-head { padding-top: 40px; padding-bottom: 40px; }
+  .neu-panel { padding: 28px; border-radius: 22px; }
+  .about-grid { grid-template-columns: 1fr; gap: 32px; }
+  .cs-rows { grid-template-columns: 1fr; gap: 28px; }
+  .cs-title { font-size: 30px; }
+  .contact-head { font-size: 34px; }
+
+  .proc-row { flex-direction: column; padding: 28px; gap: 24px; }
+  .proc-rotated { display: none; }
+  .proc-item { flex-wrap: wrap; padding: 18px 20px; }
+  .proc-title { font-size: 20px; }
+
+  .workflow-items { gap: 12px; padding: 18px 2px; }
+  .workflow-label { font-size: 12px; padding: 8px 14px; }
+}
+
+/* ---------- Smoke cursor trail ---------- */
+
+.smoke-cursor {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 9999;
+  pointer-events: none;
+  mix-blend-mode: multiply;
+}
+[data-theme="dark"] .smoke-cursor { mix-blend-mode: screen; }
+
+@media (prefers-reduced-motion: reduce) {
+  .smoke-cursor { display: none; }
+}
+@media (pointer: coarse) {
+  .smoke-cursor { display: none; }
+}

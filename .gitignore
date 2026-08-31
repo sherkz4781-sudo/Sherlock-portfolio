@@ -1,0 +1,6 @@
+.DS_Store
+
+# Design-iteration scratch files from the build process — not part of the
+# live site, kept locally for reference but not deployed.
+preview-*.html
+images/CRM model1.jpg
