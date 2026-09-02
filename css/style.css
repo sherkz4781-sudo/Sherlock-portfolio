@@ -66,6 +66,8 @@ a:hover { color: var(--accent); }
   margin: 0;
 }
 
+.about-heading { font-size: 52px; }
+
 /* ---------- Header / nav ---------- */
 
 .site-header { position: relative; }
@@ -612,10 +614,14 @@ a:hover { color: var(--accent); }
 
 /* Per-diagram narrow layouts, keyed off the diagram's own available width
    (see .svc-diagram's container-type above) rather than a viewport
-   breakpoint — 560px is roughly where the desktop layouts start to overlap,
-   confirmed against the same 800px-viewport (521px column / ~360px diagram)
-   test case that originally proved the old blanket-hide threshold. */
-@container (max-width: 560px) {
+   breakpoint. Raised from 560 to 650 (2026-09-02) after testing tablet
+   landscape (1024px viewport -> 583px diagram column): the chain layout's
+   10 circles are fixed at 52px each with flex-shrink:0, needing ~574px of
+   inner row width before its own 40px of canvas padding — a diagram column
+   anywhere from 560-614px was landing in desktop mode while still being
+   physically too narrow for it, causing 1-5px circle overlaps. 650px
+   leaves real margin above that ~614px breakeven. */
+@container (max-width: 650px) {
   /* Hub diagram (Workflow Automation): trigger -> hub -> outputs, stacked
      top to bottom instead of left to right. svcLayoutHub in main.js switches
      its connector math to match (top/bottom instead of left/right) using
@@ -642,59 +648,83 @@ a:hover { color: var(--accent); }
   .svc-diagram .zigzag-row {
     flex-direction: column;
     align-items: flex-start;
-    gap: 20px;
-  }
-  .svc-diagram .circle-node {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: flex-start;
-    text-align: left;
     gap: 14px;
   }
-  .svc-diagram .circle-node .clabel { max-width: none; }
-
-  /* CRM wheel: the radial layout's node labels become illegible once the
-     whole thing scales below ~35%, so under this width svcLayoutWheel skips
-     the radial build entirely (adding .is-grid) and this take over — brain
-     avatar on top, the 9 areas as a plain icon+label grid below. */
-  .svc-diagram .canvas--wheel.is-grid svg.connectors { display: none; }
-  .svc-diagram .canvas--wheel.is-grid .wheel-viewport { height: auto; }
-  .svc-diagram .canvas--wheel.is-grid .wheel-wrap {
-    position: static;
-    width: auto;
-    height: auto;
-    transform: none;
+  /* Grid instead of a plain flex row so the icon shape gets its own
+     fixed-width column (matched to the widest shape — the screen-node
+     rectangles below) — a plain 40px circle and an 84px screen-node
+     rectangle then both center within that same column instead of both
+     starting flush at the row's left edge, which left narrower circles
+     (Audit) visibly off-axis from the wider rectangle tiles above/below. */
+  .svc-diagram .circle-node {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 22px 10px;
-    justify-items: center;
-  }
-  .svc-diagram .canvas--wheel.is-grid .brain-avatar {
-    position: relative;
-    top: auto; left: auto;
-    transform: none;
-    grid-column: 1 / -1;
-    margin: 0 auto 4px;
-  }
-  .svc-diagram .canvas--wheel.is-grid .wheel-node {
-    position: static;
-    transform: none;
-    width: auto;
-    display: flex;
-    flex-direction: column;
+    grid-template-columns: 84px 1fr;
+    grid-template-rows: none;
     align-items: center;
-    gap: 8px;
+    justify-items: start;
+    text-align: left;
+    gap: 12px;
   }
-  .svc-diagram .canvas--wheel.is-grid .wheel-node .circle { width: 56px; height: 56px; }
-  .svc-diagram .canvas--wheel.is-grid .wheel-node .circle svg { width: 24px; height: 24px; }
-  .svc-diagram .canvas--wheel.is-grid .wheel-node .label {
-    position: static;
-    transform: none;
-    white-space: normal;
-    text-align: center;
-    font-size: 11.5px;
+  /* .circle carries an explicit grid-row:2 from the desktop 3-row template
+     above — reset it back to row 1 alongside the label reset below, or the
+     two land in separate auto-created rows instead of side by side. */
+  .svc-diagram .circle-node .circle { grid-row: 1; justify-self: center; }
+  /* label-top/label-bottom's grid-row:1/3 + align-self:end/start (set for
+     the desktop grid-row layout above) were harmless dead weight back when
+     this was a flex row, but now that this is a grid too, grid-row:3
+     actually places the label three rows below the icon (which auto-places
+     into row 1), opening a big vertical gap between them — reset both back
+     to row 1 / centered for every node regardless of which alternating
+     class it carries. Matched at the same selector specificity as the
+     label-top/label-bottom rules (both classes named explicitly) so this,
+     being later in the file, actually wins. */
+  .svc-diagram .circle-node .clabel { max-width: none; }
+  .svc-diagram .circle-node.label-top .clabel,
+  .svc-diagram .circle-node.label-bottom .clabel { grid-row: 1; align-self: center; }
+  .svc-diagram .circle-node .circle { width: 40px; height: 40px; }
+  .svc-diagram .circle-node .circle svg { width: 16px; height: 16px; }
+  .svc-diagram .circle-node.screen-node .circle { width: 84px; height: 63px; }
+  .svc-diagram .circle-node.screen-node .circle svg { width: 77px; height: 58px; }
+
+  /* CRM wheel, compact mode: below SVC_STACK_WIDTH svcLayoutWheel (main.js)
+     switches to a smaller 420x360 design with a true circle of nodes
+     instead of the desktop's 1000x515 circle — these sizes are the CSS half
+     of that (hub/circle/label rendered at their own fixed sizes rather than
+     being uniformly scaled down from the desktop numbers, which is what
+     made labels illegible before). HUB_R/CIRCLE_R in main.js must stay half
+     of the width/height set here — they're only used for connector math,
+     but need to agree with what's actually drawn on screen. Canvas padding
+     is also trimmed for this mode (below) since the tightened 360px design
+     height otherwise still had the same fixed 40px top/bottom padding as
+     every other diagram, undoing the point of tightening it. */
+  .svc-diagram .canvas--wheel.is-compact { padding: 20px 16px; }
+  .svc-diagram .canvas--wheel.is-compact .wheel-wrap {
+    width: 420px; height: 360px;
   }
+  .svc-diagram .canvas--wheel.is-compact .brain-avatar {
+    width: 152px; height: 152px;
+  }
+  .svc-diagram .canvas--wheel.is-compact .brain-avatar::before { inset: 6px; }
+  .svc-diagram .canvas--wheel.is-compact .brain-avatar img {
+    width: calc(100% - 12px); height: calc(100% - 12px);
+  }
+  .svc-diagram .canvas--wheel.is-compact .brain-avatar .ai-chip {
+    width: 54px; height: 45px; border-radius: 9px; font-size: 18px;
+  }
+  .svc-diagram .canvas--wheel.is-compact .wheel-node { width: 68px; height: 68px; }
+  .svc-diagram .canvas--wheel.is-compact .wheel-node .circle {
+    box-shadow: 7px 7px 15px var(--shadow-dark), -7px -7px 15px var(--shadow-light);
+  }
+  .svc-diagram .canvas--wheel.is-compact .wheel-node .circle svg { width: 27px; height: 27px; }
+  .svc-diagram .canvas--wheel.is-compact .wheel-node .label { font-size: 12px; }
+  .svc-diagram .canvas--wheel.is-compact .wheel-node[data-side="right"] .label { left: calc(100% + 8px); }
+  .svc-diagram .canvas--wheel.is-compact .wheel-node[data-side="left"] .label { right: calc(100% + 8px); }
+  /* Sales (the dead-top node) sits close enough to Service at this radius
+     that its default vertically-centered label would overlap Service's
+     circle — same collision the desktop 1000x515 layout already solves
+     with this exact nudge (top:20%, pulled closer horizontally), just
+     never carried over when compact mode was first built. */
+  .svc-diagram .canvas--wheel.is-compact .wheel-node[data-idx="0"] .label { top: 15%; left: calc(100% + 2px); }
 }
 @media (max-width: 1650px) {
   /* Side margins used to stay at the full 280px desktop value all the way
@@ -989,6 +1019,7 @@ a:hover { color: var(--accent); }
   .cs-rows { grid-template-columns: 1fr 1fr; }
   .proc-row { padding: 40px; gap: 32px; }
   .contact-head { font-size: 52px; }
+  .about-heading { font-size: 28px; }
 }
 
 /* ================= Mobile ================= */

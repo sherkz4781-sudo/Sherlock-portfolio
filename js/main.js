@@ -220,9 +220,9 @@
       return 'M ' + a.x + ' ' + a.y + ' C ' + a.x + ' ' + midY + ', ' + b.x + ' ' + midY + ', ' + b.x + ' ' + b.y;
     }
 
-    // Matches the @container (max-width: 560px) breakpoint in style.css that
+    // Matches the @container (max-width: 650px) breakpoint in style.css that
     // switches the hub and CRM-wheel diagrams to their stacked layouts.
-    var SVC_STACK_WIDTH = 560;
+    var SVC_STACK_WIDTH = 650;
 
     // Draws a static background line plus a beam path (the one svcTravelSegment
     // animates) along the same curve. Shared by every diagram type so the beam
@@ -408,13 +408,18 @@
       var nodes = Array.prototype.slice.call(canvas.querySelectorAll('.wheel-node'));
       if (!viewport || !wrap || !hub || !nodes.length) return;
 
-      // Below SVC_STACK_WIDTH the radial layout would scale past the point
-      // its node labels stay legible, so it's swapped for a plain icon+label
-      // grid (see the .is-grid rules in style.css) instead of scaling
-      // further. Mode is tracked separately from _svcWheelBuilt so a device
-      // rotation crossing the threshold tears down whichever mode was built
-      // and lets the other one start clean.
-      var mode = canvas.getBoundingClientRect().width < SVC_STACK_WIDTH ? 'grid' : 'wheel';
+      // Below SVC_STACK_WIDTH the desktop wheel's 1000x515 design would need
+      // to shrink past the point its node labels stay legible. Rather than
+      // dropping to a flat icon grid (the old behavior), it switches to a
+      // "compact" mode: a smaller, taller design (see the .is-compact rules
+      // in style.css for the matching hub/circle/label sizes) with nodes
+      // arranged on an oval instead of a circle — the extra vertical room an
+      // oval gives keeps same-side labels from colliding at this width,
+      // while everything still reads as the same wheel-around-a-hub shape.
+      // Mode is tracked separately from _svcWheelBuilt so a device rotation
+      // crossing the threshold tears down whichever mode was built and lets
+      // the other one start clean.
+      var mode = canvas.getBoundingClientRect().width < SVC_STACK_WIDTH ? 'compact' : 'wheel';
       if (canvas._svcWheelMode !== mode) {
         if (canvas._svcRelayToken) canvas._svcRelayToken.cancelled = true;
         wrap.style.cssText = '';
@@ -424,10 +429,10 @@
         canvas._svcWheelBuilt = false;
         canvas._svcWheelMode = mode;
       }
-      canvas.classList.toggle('is-grid', mode === 'grid');
-      if (mode === 'grid') return;
+      canvas.classList.toggle('is-compact', mode === 'compact');
 
-      var DESIGN_W = 1000, DESIGN_H = 515;
+      var DESIGN_W = mode === 'compact' ? 420 : 1000;
+      var DESIGN_H = mode === 'compact' ? 360 : 515;
       var scale = Math.min(1, canvas.getBoundingClientRect().width / DESIGN_W);
       wrap.style.transform = 'translateX(-50%) scale(' + scale + ')';
       viewport.style.height = (DESIGN_H * scale) + 'px';
@@ -440,20 +445,28 @@
       svg.setAttribute('viewBox', '0 0 ' + DESIGN_W + ' ' + DESIGN_H);
 
       var CENTER_X = DESIGN_W / 2, CENTER_Y = DESIGN_H / 2;
-      var HUB_R = 101, CIRCLE_R = 48, NODE_R = 190;
+      // HUB_R/CIRCLE_R must match the compact CSS's .brain-avatar/.circle
+      // pixel sizes (halved) — they're only used here for connector math,
+      // the visual sizes themselves live in style.css's .is-compact rules.
+      var HUB_R = mode === 'compact' ? 76 : 101;
+      var CIRCLE_R = mode === 'compact' ? 34 : 48;
+      var NODE_RX = mode === 'compact' ? 132 : 190;
+      var NODE_RY = mode === 'compact' ? 132 : 190;
       var LINE_INNER = HUB_R + 8;
-      var LINE_OUTER = NODE_R - CIRCLE_R - 8;
 
       var beams = nodes.map(function (node, i) {
         var angle = (i / nodes.length) * 2 * Math.PI - Math.PI / 2;
-        var dx = NODE_R * Math.cos(angle);
-        var dy = NODE_R * Math.sin(angle);
+        var dx = NODE_RX * Math.cos(angle);
+        var dy = NODE_RY * Math.sin(angle);
+        var dist = Math.sqrt(dx * dx + dy * dy);
+        var ux = dx / dist, uy = dy / dist;
         node.style.left = (CENTER_X + dx) + 'px';
         node.style.top = (CENTER_Y + dy) + 'px';
         node.setAttribute('data-side', dx >= 0 ? 'right' : 'left');
 
-        var p1 = { x: CENTER_X + LINE_INNER * Math.cos(angle), y: CENTER_Y + LINE_INNER * Math.sin(angle) };
-        var p2 = { x: CENTER_X + LINE_OUTER * Math.cos(angle), y: CENTER_Y + LINE_OUTER * Math.sin(angle) };
+        var lineOuter = dist - CIRCLE_R - 8;
+        var p1 = { x: CENTER_X + LINE_INNER * ux, y: CENTER_Y + LINE_INNER * uy };
+        var p2 = { x: CENTER_X + lineOuter * ux, y: CENTER_Y + lineOuter * uy };
         var beam = svcMakeBeam(svg, 'M ' + p1.x + ' ' + p1.y + ' L ' + p2.x + ' ' + p2.y);
         svcMakeJoint(svg, p1, p2);
         return beam;
