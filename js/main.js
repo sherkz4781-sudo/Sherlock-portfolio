@@ -156,43 +156,32 @@
       { transform: 'scale(1.14)', boxShadow: '0 0 18px 5px var(--accent), ' + SVC_ICON_REST, offset: 0.35 },
       { transform: 'scale(1)', boxShadow: SVC_ICON_GLOW_OFF + ', ' + SVC_ICON_REST, offset: 1 }
     ];
-    var SVC_CIRCLE_REST = '7px 7px 14px var(--shadow-dark), -7px -7px 14px var(--shadow-light)';
-    var SVC_CIRCLE_FLASH = [
-      { transform: 'scale(1)', boxShadow: SVC_CIRCLE_REST, offset: 0 },
-      { transform: 'scale(1.14)', boxShadow: '0 0 18px 5px var(--accent), ' + SVC_CIRCLE_REST, offset: 0.35 },
-      { transform: 'scale(1)', boxShadow: SVC_CIRCLE_REST, offset: 1 }
-    ];
-    // The CRM wheel's circles are a different (bigger, 96px) size than the
-    // chain's 52px circles, so they rest at a deeper shadow — reusing
-    // SVC_CIRCLE_FLASH's rest value here would make the flash settle back to
-    // the wrong shadow depth every time.
-    var SVC_WHEEL_CIRCLE_REST = '9px 9px 20px var(--shadow-dark), -9px -9px 20px var(--shadow-light)';
-    var SVC_WHEEL_CIRCLE_FLASH = [
-      { transform: 'scale(1)', boxShadow: SVC_WHEEL_CIRCLE_REST, offset: 0 },
-      { transform: 'scale(1.14)', boxShadow: '0 0 18px 5px var(--accent), ' + SVC_WHEEL_CIRCLE_REST, offset: 0.35 },
-      { transform: 'scale(1)', boxShadow: SVC_WHEEL_CIRCLE_REST, offset: 1 }
-    ];
-    // The brain avatar's glow deliberately has no transform — any scale reads
-    // as the whole hub "moving," which was tried and explicitly rejected in
-    // favor of a stationary hub that only glows (box-shadow only, teal to
-    // match the AI chip's own border/text color). The chip now glows too,
-    // in sync with the brain (see SVC_CHIP_FLASH below), also box-shadow-only
-    // for the same stationary reason.
-    var SVC_BRAIN_REST = '13px 13px 27px var(--shadow-dark), -13px -13px 27px var(--shadow-light)';
-    var SVC_BRAIN_FLASH = [
-      { boxShadow: SVC_BRAIN_REST, offset: 0 },
-      { boxShadow: '0 0 26px 7px hsl(200, 80%, 48%), ' + SVC_BRAIN_REST, offset: 0.35 },
-      { boxShadow: SVC_BRAIN_REST, offset: 1 }
-    ];
-    // The AI chip glows in sync with the brain avatar now (same teal hue as
-    // its own border) — box-shadow only, no transform, for the same
-    // "stationary" reason as the brain avatar above.
-    var SVC_CHIP_REST = '2px 2px 6px var(--shadow-dark), -2px -2px 6px var(--shadow-light)';
-    var SVC_CHIP_FLASH = [
-      { boxShadow: SVC_CHIP_REST, offset: 0 },
-      { boxShadow: '0 0 16px 4px hsl(200, 80%, 48%), ' + SVC_CHIP_REST, offset: 0.35 },
-      { boxShadow: SVC_CHIP_REST, offset: 1 }
-    ];
+    // The chain's circles, the wheel's circles, the brain avatar, and the AI
+    // chip all render at a different size in compact mode than in the
+    // desktop layout (see the .is-compact CSS overrides), so their resting
+    // box-shadow differs by mode too. Baking a fixed REST string into these
+    // keyframes (as the hub's icon tiles above do, since those genuinely
+    // are the same size in both layouts) means every single flash — and
+    // these loop continuously — snaps from whatever the CSS rest shadow
+    // actually is to this hardcoded value and back, a visible "harsh" pop
+    // on top of the intended glow. svcRestFlash reads the tile's live
+    // computed box-shadow immediately before each flash instead, so it's
+    // always correct for whatever mode/size is currently in effect.
+    function svcRestFlash(tile, glowLayer, withScale) {
+      var rest = getComputedStyle(tile).boxShadow;
+      return withScale ? [
+        { transform: 'scale(1)', boxShadow: rest, offset: 0 },
+        { transform: 'scale(1.14)', boxShadow: glowLayer + ', ' + rest, offset: 0.35 },
+        { transform: 'scale(1)', boxShadow: rest, offset: 1 }
+      ] : [
+        { boxShadow: rest, offset: 0 },
+        { boxShadow: glowLayer + ', ' + rest, offset: 0.35 },
+        { boxShadow: rest, offset: 1 }
+      ];
+    }
+    var SVC_CIRCLE_GLOW = '0 0 18px 5px var(--accent)';
+    var SVC_BRAIN_GLOW = '0 0 26px 7px hsl(200, 80%, 48%)';
+    var SVC_CHIP_GLOW = '0 0 16px 4px hsl(200, 80%, 48%)';
 
     function svcPoint(el, side, canvasRect) {
       var r = el.getBoundingClientRect();
@@ -494,12 +483,13 @@
           for (var k = 0; k < order.length; k++) {
             var idx = order[k];
             await Promise.all([
-              svcFlashOnce(hub, SVC_BRAIN_FLASH),
-              chip ? svcFlashOnce(chip, SVC_CHIP_FLASH) : Promise.resolve()
+              svcFlashOnce(hub, svcRestFlash(hub, SVC_BRAIN_GLOW, false)),
+              chip ? svcFlashOnce(chip, svcRestFlash(chip, SVC_CHIP_GLOW, false)) : Promise.resolve()
             ]);
             await new Promise(function (r) { setTimeout(r, SVC_PAUSE_MS); });
             await svcTravelSegment(beams[idx]);
-            await svcFlashOnce(nodes[idx].querySelector('.circle'), SVC_WHEEL_CIRCLE_FLASH);
+            var wheelCircle = nodes[idx].querySelector('.circle');
+            await svcFlashOnce(wheelCircle, svcRestFlash(wheelCircle, SVC_CIRCLE_GLOW, true));
             await new Promise(function (r) { setTimeout(r, SVC_PAUSE_MS); });
           }
         }
@@ -536,7 +526,8 @@
       (async function relay() {
         var i = 0;
         while (!token.cancelled) {
-          await svcFlashOnce(nodes[i].querySelector('.circle'), SVC_CIRCLE_FLASH);
+          var chainCircle = nodes[i].querySelector('.circle');
+          await svcFlashOnce(chainCircle, svcRestFlash(chainCircle, SVC_CIRCLE_GLOW, true));
           if (token.cancelled) return;
           var nextIndex = (i + 1) % nodes.length;
           if (nextIndex !== 0) {

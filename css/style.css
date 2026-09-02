@@ -687,7 +687,15 @@ a:hover { color: var(--accent); }
   .svc-diagram .circle-node .clabel { max-width: none; }
   .svc-diagram .circle-node.label-top .clabel,
   .svc-diagram .circle-node.label-bottom .clabel { grid-row: 1; align-self: center; }
-  .svc-diagram .circle-node .circle { width: 40px; height: 40px; }
+  /* Same shadow-scaling fix as the CRM wheel below: shrinking the circle
+     from the desktop 52px to 40px without also scaling its box-shadow
+     left it carrying the full-size blur/offset on a visibly smaller
+     shape. Scaled proportionally to the ~0.77x size ratio. */
+  .svc-diagram .circle-node .circle {
+    width: 40px;
+    height: 40px;
+    box-shadow: 5px 5px 11px var(--shadow-dark), -5px -5px 11px var(--shadow-light);
+  }
   .svc-diagram .circle-node .circle svg { width: 16px; height: 16px; }
   .svc-diagram .circle-node.screen-node .circle { width: 84px; height: 63px; }
   .svc-diagram .circle-node.screen-node .circle svg { width: 77px; height: 58px; }
@@ -707,40 +715,32 @@ a:hover { color: var(--accent); }
   .svc-diagram .canvas--wheel.is-compact .wheel-wrap {
     width: 420px; height: 360px;
   }
+  /* Resizing the avatar/chip (202px->152px, 70x58->54x45) without also
+     scaling their box-shadows left them carrying the full-size desktop
+     blur/offset on a visibly smaller shape — a heavier, smudged shadow
+     than the neumorphic style calls for elsewhere. Scaled proportionally
+     to the same ~0.75x ratio as the size reduction. */
   .svc-diagram .canvas--wheel.is-compact .brain-avatar {
     width: 152px; height: 152px;
+    box-shadow: 10px 10px 20px var(--shadow-dark), -10px -10px 20px var(--shadow-light);
   }
-  .svc-diagram .canvas--wheel.is-compact .brain-avatar::before { inset: 6px; }
+  .svc-diagram .canvas--wheel.is-compact .brain-avatar::before {
+    inset: 6px;
+    box-shadow: inset 2.5px 2.5px 6px var(--shadow-dark), inset -2.5px -2.5px 6px var(--shadow-light);
+  }
   .svc-diagram .canvas--wheel.is-compact .brain-avatar img {
     width: calc(100% - 12px); height: calc(100% - 12px);
   }
   .svc-diagram .canvas--wheel.is-compact .brain-avatar .ai-chip {
     width: 54px; height: 45px; border-radius: 9px; font-size: 18px;
+    box-shadow: 1.5px 1.5px 4.5px var(--shadow-dark), -1.5px -1.5px 4.5px var(--shadow-light);
   }
   .svc-diagram .canvas--wheel.is-compact .wheel-node { width: 68px; height: 68px; }
   .svc-diagram .canvas--wheel.is-compact .wheel-node .circle {
     box-shadow: 7px 7px 15px var(--shadow-dark), -7px -7px 15px var(--shadow-light);
   }
   .svc-diagram .canvas--wheel.is-compact .wheel-node .circle svg { width: 27px; height: 27px; }
-  /* The longest labels ("Communication", "Support") are single words with
-     no natural break point — at scale, nowrap let them reach far enough to
-     spill past the card edge on real narrow phones (~360px viewport and
-     below, not covered by the 375px-and-up widths this was first verified
-     at). Capping width and wrapping keeps every label's worst-case reach
-     bounded regardless of exact viewport, instead of scaling with however
-     long its text happens to be. Real dictionary hyphenation (not plain
-     overflow-wrap, which broke words at whatever character ran out of
-     room — "Servic-e", "Suppo-rt") so the forced line breaks land at
-     actual syllable boundaries; overflow-wrap stays as the fallback for a
-     browser with no hyphenation dictionary loaded. */
-  .svc-diagram .canvas--wheel.is-compact .wheel-node .label {
-    font-size: 12px;
-    white-space: normal;
-    max-width: 40px;
-    overflow-wrap: break-word;
-    -webkit-hyphens: auto;
-    hyphens: auto;
-  }
+  .svc-diagram .canvas--wheel.is-compact .wheel-node .label { font-size: 12px; }
   .svc-diagram .canvas--wheel.is-compact .wheel-node[data-side="right"] .label { left: calc(100% + 8px); }
   .svc-diagram .canvas--wheel.is-compact .wheel-node[data-side="left"] .label { right: calc(100% + 8px); }
   /* Sales (the dead-top node) sits close enough to Service at this radius
