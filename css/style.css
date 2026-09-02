@@ -422,7 +422,7 @@ a:hover { color: var(--accent); }
 .svc-diagram .radial-wrap { position: relative; z-index: 1; height: 360px; display: flex; align-items: center; justify-content: center; }
 .svc-diagram .canvas--wheel { padding: 40px 24px; }
 .svc-diagram .wheel-viewport { position: relative; width: 100%; overflow: visible; }
-.svc-diagram .wheel-wrap { position: absolute; left: 50%; top: 0; width: 1000px; height: 760px; transform-origin: top center; }
+.svc-diagram .wheel-wrap { position: absolute; left: 50%; top: 0; width: 1000px; height: 515px; transform-origin: top center; }
 .svc-diagram .brain-avatar {
   /* Self-centering (absolute + translate) rather than relying on a flex
      parent to center it — the wheel's .wheel-wrap is a fixed-size absolute
@@ -473,9 +473,9 @@ a:hover { color: var(--accent); }
   width: 70px; height: 58px;
   border-radius: 12px;
   background: var(--paper);
-  /* Teal border matches the "AI" text and .smoke-cursor's own hue family
-     (185-215, driven from main.js) — the chip is fully stationary (no
-     animation at all); the glow-pulse lives on the brain avatar instead. */
+  /* Teal border matches the "AI" text. The chip glows in sync with the brain
+     avatar (box-shadow only, no transform/scale) — it stays in place while
+     it glows, same "stationary" rule as the brain avatar's own glow. */
   border: 2px solid hsl(200, 80%, 48%);
   box-shadow: 2px 2px 6px var(--shadow-dark), -2px -2px 6px var(--shadow-light);
   display: flex; align-items: center; justify-content: center;
@@ -548,6 +548,24 @@ a:hover { color: var(--accent); }
   color: var(--accent);
 }
 .svc-diagram .circle-node .circle svg { width: 21px; height: 21px; }
+/* Web Design Modernization's "screen" tiles (Outdated Site / Redesign /
+   Modern Site) — a 4:3 aspect ratio instead of a circle, since these three
+   are literally depicting a page/screen. Only width/height/radius are
+   overridden; background, shadow, and color still come from the base
+   .circle rule above so the flash/glow animation (SVC_CIRCLE_FLASH) needs no
+   changes at all — main.js only ever reads this element's
+   getBoundingClientRect(), it doesn't care about its shape. */
+.svc-diagram .circle-node.screen-node .circle {
+  width: 114px;
+  height: 85.5px;
+  border-radius: 14px;
+}
+/* stroke-width is set thinner directly on these 3 icons' own <svg> markup
+   (not here) — at this much larger render size, the shared 24x24-viewBox
+   icons' usual stroke-width="2" would render far thicker on screen than the
+   same value does at Audit's small 21px size, so it's scaled down on the
+   markup itself to keep the drawn line the same visual weight everywhere. */
+.svc-diagram .circle-node.screen-node .circle svg { width: 104px; height: 78px; }
 .svc-diagram .circle-node .clabel {
   font-family: 'Space Grotesk', sans-serif;
   font-size: 11px;
@@ -1018,9 +1036,9 @@ a:hover { color: var(--accent); }
   .workflow-label { font-size: 12px; padding: 8px 14px; }
 }
 
-/* ---------- Smoke cursor trail ---------- */
+/* ---------- Water ripple cursor trail ---------- */
 
-.smoke-cursor {
+.ripple-cursor {
   position: fixed;
   inset: 0;
   width: 100%;
@@ -1029,11 +1047,11 @@ a:hover { color: var(--accent); }
   pointer-events: none;
   mix-blend-mode: multiply;
 }
-[data-theme="dark"] .smoke-cursor { mix-blend-mode: screen; }
+[data-theme="dark"] .ripple-cursor { mix-blend-mode: screen; }
 
 @media (prefers-reduced-motion: reduce) {
-  .smoke-cursor { display: none; }
+  .ripple-cursor { display: none; }
 }
 @media (pointer: coarse) {
-  .smoke-cursor { display: none; }
+  .ripple-cursor { display: none; }
 }

@@ -142,10 +142,19 @@
     // one-shot flash keyframes matching its tile's own rest box-shadow style
     // (the hub's square icons are inset; the chain's circles are raised).
     var SVC_ICON_REST = 'inset 3px 3px 6px var(--shadow-dark), inset -3px -3px 6px var(--shadow-light)';
+    // Rest keyframes carry an invisible, non-inset placeholder shadow in the
+    // same list slot the glow occupies at peak. Without it, the browser has
+    // to interpolate an `inset` rest shadow into a non-inset glow shadow at
+    // the same position — box-shadow can't blend across that inset/non-inset
+    // mismatch, so it falls back to a hard discrete flip (glow snaps fully on
+    // around the segment's halfway point, then snaps fully off) instead of
+    // fading like the raised circle tiles do, whose rest shadow is already
+    // non-inset and blends with the glow with no such mismatch.
+    var SVC_ICON_GLOW_OFF = '0 0 0px 0px rgba(0, 0, 0, 0)';
     var SVC_ICON_FLASH = [
-      { transform: 'scale(1)', boxShadow: SVC_ICON_REST, offset: 0 },
+      { transform: 'scale(1)', boxShadow: SVC_ICON_GLOW_OFF + ', ' + SVC_ICON_REST, offset: 0 },
       { transform: 'scale(1.14)', boxShadow: '0 0 18px 5px var(--accent), ' + SVC_ICON_REST, offset: 0.35 },
-      { transform: 'scale(1)', boxShadow: SVC_ICON_REST, offset: 1 }
+      { transform: 'scale(1)', boxShadow: SVC_ICON_GLOW_OFF + ', ' + SVC_ICON_REST, offset: 1 }
     ];
     var SVC_CIRCLE_REST = '7px 7px 14px var(--shadow-dark), -7px -7px 14px var(--shadow-light)';
     var SVC_CIRCLE_FLASH = [
@@ -166,13 +175,23 @@
     // The brain avatar's glow deliberately has no transform — any scale reads
     // as the whole hub "moving," which was tried and explicitly rejected in
     // favor of a stationary hub that only glows (box-shadow only, teal to
-    // match the AI chip's own border/text color, which itself stays fully
-    // inert — the chip was also asked to be made stationary).
+    // match the AI chip's own border/text color). The chip now glows too,
+    // in sync with the brain (see SVC_CHIP_FLASH below), also box-shadow-only
+    // for the same stationary reason.
     var SVC_BRAIN_REST = '13px 13px 27px var(--shadow-dark), -13px -13px 27px var(--shadow-light)';
     var SVC_BRAIN_FLASH = [
       { boxShadow: SVC_BRAIN_REST, offset: 0 },
       { boxShadow: '0 0 26px 7px hsl(200, 80%, 48%), ' + SVC_BRAIN_REST, offset: 0.35 },
       { boxShadow: SVC_BRAIN_REST, offset: 1 }
+    ];
+    // The AI chip glows in sync with the brain avatar now (same teal hue as
+    // its own border) — box-shadow only, no transform, for the same
+    // "stationary" reason as the brain avatar above.
+    var SVC_CHIP_REST = '2px 2px 6px var(--shadow-dark), -2px -2px 6px var(--shadow-light)';
+    var SVC_CHIP_FLASH = [
+      { boxShadow: SVC_CHIP_REST, offset: 0 },
+      { boxShadow: '0 0 16px 4px hsl(200, 80%, 48%), ' + SVC_CHIP_REST, offset: 0.35 },
+      { boxShadow: SVC_CHIP_REST, offset: 1 }
     ];
 
     function svcPoint(el, side, canvasRect) {
@@ -326,7 +345,7 @@
     // scaled glow, pause, and the travel floor+multiplier all by the same
     // 16000/23985 factor together — see the comment on svcTravelSegment for
     // the travel side of that scaling).
-    var SVC_GLOW_MS = 751;
+    var SVC_GLOW_MS = 860;
     var SVC_PAUSE_MS = 250; // brief hold after a glow before the beam departs
 
     function svcFlashOnce(tile, keyframes) {
@@ -385,6 +404,7 @@
       var viewport = canvas.querySelector('.wheel-viewport');
       var wrap = canvas.querySelector('.wheel-wrap');
       var hub = canvas.querySelector('.brain-avatar');
+      var chip = canvas.querySelector('.ai-chip');
       var nodes = Array.prototype.slice.call(canvas.querySelectorAll('.wheel-node'));
       if (!viewport || !wrap || !hub || !nodes.length) return;
 
@@ -407,7 +427,7 @@
       canvas.classList.toggle('is-grid', mode === 'grid');
       if (mode === 'grid') return;
 
-      var DESIGN_W = 1000, DESIGN_H = 760;
+      var DESIGN_W = 1000, DESIGN_H = 515;
       var scale = Math.min(1, canvas.getBoundingClientRect().width / DESIGN_W);
       wrap.style.transform = 'translateX(-50%) scale(' + scale + ')';
       viewport.style.height = (DESIGN_H * scale) + 'px';
@@ -460,7 +480,10 @@
           var order = shuffledOrder(nodes.length);
           for (var k = 0; k < order.length; k++) {
             var idx = order[k];
-            await svcFlashOnce(hub, SVC_BRAIN_FLASH);
+            await Promise.all([
+              svcFlashOnce(hub, SVC_BRAIN_FLASH),
+              chip ? svcFlashOnce(chip, SVC_CHIP_FLASH) : Promise.resolve()
+            ]);
             await new Promise(function (r) { setTimeout(r, SVC_PAUSE_MS); });
             await svcTravelSegment(beams[idx]);
             await svcFlashOnce(nodes[idx].querySelector('.circle'), SVC_WHEEL_CIRCLE_FLASH);
@@ -543,18 +566,20 @@
     }
   })();
 
-  // Colorful smoke cursor trail: a canvas particle system. Puffs spawn on
-  // mouse movement, drift upward, expand, and fade like smoke, in a cool
-  // cyan/teal/blue palette.
-  var canvas = document.querySelector('.smoke-cursor');
+  // Water ripple cursor trail: a canvas ring system. Ripples spawn as the
+  // cursor moves and expand outward like disturbances on a water surface —
+  // a bright crest ring plus a fainter trailing ring — easing out fast then
+  // slow, and fading as they grow.
+  var canvas = document.querySelector('.ripple-cursor');
   var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   var coarsePointer = window.matchMedia('(pointer: coarse)').matches;
   if (canvas && !reduceMotion && !coarsePointer && canvas.getContext) {
     var ctx = canvas.getContext('2d');
     var dpr = Math.min(window.devicePixelRatio || 1, 2);
-    var particles = [];
-    var lastX = null, lastY = null;
-    var MAX_PARTICLES = 220;
+    var ripples = [];
+    var lastSpawnX = null, lastSpawnY = null;
+    var MAX_RIPPLES = 40;
+    var SPAWN_SPACING = 26;
 
     function resize() {
       canvas.width = window.innerWidth * dpr;
@@ -565,78 +590,78 @@
     window.addEventListener('resize', resize);
 
     function spawn(x, y) {
-      var count = 2 + Math.floor(Math.random() * 2);
-      for (var i = 0; i < count; i++) {
-        var angle = Math.random() * Math.PI * 2;
-        var speed = 0.3 + Math.random() * 0.8;
-        particles.push({
-          x: x + (Math.random() - 0.5) * 10,
-          y: y + (Math.random() - 0.5) * 10,
-          vx: Math.cos(angle) * speed,
-          vy: Math.sin(angle) * speed - 0.4,
-          r: 30 + Math.random() * 30,
-          maxR: 102 + Math.random() * 90,
-          hue: 185 + Math.random() * 30,
-          sat: 70 + Math.random() * 20,
-          light: 45 + Math.random() * 25,
-          age: 0,
-          life: 900 + Math.random() * 500
-        });
-      }
-      if (particles.length > MAX_PARTICLES) {
-        particles.splice(0, particles.length - MAX_PARTICLES);
+      ripples.push({
+        x: x,
+        y: y,
+        hue: 197 + Math.random() * 12,
+        maxR: 44 + Math.random() * 24,
+        age: 0,
+        life: 2000 + Math.random() * 900
+      });
+      if (ripples.length > MAX_RIPPLES) {
+        ripples.splice(0, ripples.length - MAX_RIPPLES);
       }
     }
 
     document.addEventListener('mousemove', function (e) {
-      if (lastX === null) {
+      if (lastSpawnX === null) {
         spawn(e.clientX, e.clientY);
-      } else {
-        var dx = e.clientX - lastX, dy = e.clientY - lastY;
-        var dist = Math.sqrt(dx * dx + dy * dy);
-        var steps = Math.min(Math.ceil(dist / 14), 6);
-        for (var s = 1; s <= steps; s++) {
-          spawn(lastX + (dx * s) / steps, lastY + (dy * s) / steps);
-        }
+        lastSpawnX = e.clientX;
+        lastSpawnY = e.clientY;
+        return;
       }
-      lastX = e.clientX;
-      lastY = e.clientY;
+      var dx = e.clientX - lastSpawnX, dy = e.clientY - lastSpawnY;
+      var dist = Math.sqrt(dx * dx + dy * dy);
+      if (dist >= SPAWN_SPACING) {
+        var steps = Math.min(Math.floor(dist / SPAWN_SPACING), 4);
+        for (var s = 1; s <= steps; s++) {
+          spawn(lastSpawnX + (dx * s) / steps, lastSpawnY + (dy * s) / steps);
+        }
+        lastSpawnX = e.clientX;
+        lastSpawnY = e.clientY;
+      }
     }, { passive: true });
 
     document.addEventListener('mouseleave', function () {
-      lastX = null;
-      lastY = null;
+      lastSpawnX = null;
+      lastSpawnY = null;
     });
 
-    var lastTime = performance.now();
-    function tick(now) {
-      var dt = Math.min(now - lastTime, 48);
-      lastTime = now;
+    function tick() {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       ctx.globalCompositeOperation = 'lighter';
 
-      for (var i = particles.length - 1; i >= 0; i--) {
-        var p = particles[i];
-        p.age += dt;
-        var t = p.age / p.life;
+      var lastTime = tick._last || performance.now();
+      var now = performance.now();
+      var dt = Math.min(now - lastTime, 48);
+      tick._last = now;
+
+      for (var i = ripples.length - 1; i >= 0; i--) {
+        var r = ripples[i];
+        r.age += dt;
+        var t = r.age / r.life;
         if (t >= 1) {
-          particles.splice(i, 1);
+          ripples.splice(i, 1);
           continue;
         }
-        p.x += p.vx * (dt / 16);
-        p.y += p.vy * (dt / 16);
-        p.vx *= 0.985;
-        p.vy = p.vy * 0.985 - 0.006 * (dt / 16);
-        var radius = p.r + (p.maxR - p.r) * t;
-        var alpha = 0.05 * (1 - t) * (1 - t);
+        var ease = 1 - Math.pow(1 - t, 3);
+        var radius = 3 + r.maxR * ease;
+        var alpha = (1 - t) * (1 - t) * 0.32;
 
-        var grd = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, radius);
-        grd.addColorStop(0, 'hsla(' + p.hue + ', ' + p.sat + '%, ' + p.light + '%, ' + alpha + ')');
-        grd.addColorStop(1, 'hsla(' + p.hue + ', ' + p.sat + '%, ' + p.light + '%, 0)');
-        ctx.fillStyle = grd;
         ctx.beginPath();
-        ctx.arc(p.x, p.y, radius, 0, Math.PI * 2);
-        ctx.fill();
+        ctx.arc(r.x, r.y, radius, 0, Math.PI * 2);
+        ctx.lineWidth = Math.max(0.6, 2.2 * (1 - ease));
+        ctx.strokeStyle = 'hsla(' + r.hue + ', 65%, 58%, ' + alpha + ')';
+        ctx.stroke();
+
+        var innerR = radius * 0.88;
+        if (innerR > 2) {
+          ctx.beginPath();
+          ctx.arc(r.x, r.y, innerR, 0, Math.PI * 2);
+          ctx.lineWidth = Math.max(0.4, 1.1 * (1 - ease));
+          ctx.strokeStyle = 'hsla(' + (r.hue + 10) + ', 45%, 90%, ' + (alpha * 0.65) + ')';
+          ctx.stroke();
+        }
       }
 
       requestAnimationFrame(tick);
