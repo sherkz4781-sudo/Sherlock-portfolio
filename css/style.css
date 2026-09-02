@@ -627,7 +627,13 @@ a:hover { color: var(--accent); }
      its connector math to match (top/bottom instead of left/right) using
      this same 560px number. */
   .svc-diagram .nodes {
-    grid-template-columns: 1fr;
+    /* minmax(0, 1fr) not plain 1fr — a bare 1fr track's automatic minimum
+       is its content's min-content size, which let node--hub/node--output
+       (whose padding+icon+label don't want to shrink) force this column
+       wider than its own container at narrow widths, the same grid-track
+       blowout the About section hit earlier this session. */
+    grid-template-columns: minmax(0, 1fr);
+    min-width: 0;
     min-height: 0;
     gap: 18px;
   }
@@ -716,7 +722,25 @@ a:hover { color: var(--accent); }
     box-shadow: 7px 7px 15px var(--shadow-dark), -7px -7px 15px var(--shadow-light);
   }
   .svc-diagram .canvas--wheel.is-compact .wheel-node .circle svg { width: 27px; height: 27px; }
-  .svc-diagram .canvas--wheel.is-compact .wheel-node .label { font-size: 12px; }
+  /* The longest labels ("Communication", "Support") are single words with
+     no natural break point — at scale, nowrap let them reach far enough to
+     spill past the card edge on real narrow phones (~360px viewport and
+     below, not covered by the 375px-and-up widths this was first verified
+     at). Capping width and wrapping keeps every label's worst-case reach
+     bounded regardless of exact viewport, instead of scaling with however
+     long its text happens to be. Real dictionary hyphenation (not plain
+     overflow-wrap, which broke words at whatever character ran out of
+     room — "Servic-e", "Suppo-rt") so the forced line breaks land at
+     actual syllable boundaries; overflow-wrap stays as the fallback for a
+     browser with no hyphenation dictionary loaded. */
+  .svc-diagram .canvas--wheel.is-compact .wheel-node .label {
+    font-size: 12px;
+    white-space: normal;
+    max-width: 40px;
+    overflow-wrap: break-word;
+    -webkit-hyphens: auto;
+    hyphens: auto;
+  }
   .svc-diagram .canvas--wheel.is-compact .wheel-node[data-side="right"] .label { left: calc(100% + 8px); }
   .svc-diagram .canvas--wheel.is-compact .wheel-node[data-side="left"] .label { right: calc(100% + 8px); }
   /* Sales (the dead-top node) sits close enough to Service at this radius
@@ -1008,10 +1032,10 @@ a:hover { color: var(--accent); }
 /* ================= Tablet ================= */
 
 @media (max-width: 1024px) {
-  .wrap { padding: 0 56px; }
+  .wrap { padding: 0 28px; }
   .nav-bar { margin: 24px 0 0; }
-  .svc-section { padding: 56px 56px 72px; gap: 32px; }
-  .scroll-hint { padding: 8px 56px 32px; }
+  .svc-section { padding: 56px 28px 72px; gap: 32px; }
+  .scroll-hint { padding: 8px 28px 32px; }
   .svc-rotated { width: 120px; }
   .svc-rotated span, .proc-rotated span { font-size: 110px; }
   .hero-head { font-size: 76px; }
@@ -1025,7 +1049,7 @@ a:hover { color: var(--accent); }
 /* ================= Mobile ================= */
 
 @media (max-width: 720px) {
-  .wrap { padding: 0 24px; }
+  .wrap { padding: 0 12px; }
   .nav-bar { margin: 20px 0 0; padding: 14px 20px; }
   .nav-links { display: none; }
   .menu-toggle { display: flex; }
@@ -1042,14 +1066,14 @@ a:hover { color: var(--accent); }
   .hero-foot { margin-top: 32px; }
   .hero-sub { max-width: none; font-size: 15px; margin-bottom: 0; }
 
-  .svc-section { flex-direction: column; padding: 40px 24px 56px; gap: 16px; }
+  .svc-section { flex-direction: column; padding: 40px 12px 56px; gap: 16px; }
   .svc-rotated { display: none; }
   .svc-acc { gap: 16px; }
   .svc-acc-row { padding: 0 20px; }
   .svc-acc-idx { font-size: 32px; width: 48px; }
   .svc-acc-name { font-size: 18px; }
   .svc-acc-body-inner { padding-left: 64px; }
-  .scroll-hint { padding: 8px 24px 24px; }
+  .scroll-hint { padding: 8px 12px 24px; }
 
   .section-head { padding-top: 40px; padding-bottom: 40px; }
   .neu-panel { padding: 28px; border-radius: 22px; }
