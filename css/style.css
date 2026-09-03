@@ -842,23 +842,10 @@ a:hover { color: var(--accent); }
 
 .workflow-scroll {
   overflow-x: auto;
-  /* Left side gets a much bigger negative-margin/padding pair than the
-     right — overflow-x:auto forces overflow-y to compute as auto too (per
-     spec), so this becomes a real clipping/scroll box. Every pill uses
-     .reveal-left (translateX(-70px) mobile / -110px desktop) for its
-     pre-reveal state; the very first pill's own rest position is only 2px
-     from this container's edge, so shifting it further left by 70-110px
-     pushed it to a negative x — outside the scrollable [0, scrollWidth]
-     range — where it got clipped to zero visible area and never
-     registered as intersecting, permanently stuck invisible (same root
-     cause as the historical vertical-reveal-in-a-horizontal-scroller bug,
-     just on the primary axis this time). The 114px left padding gives the
-     transform room to exist inside the clipping box without being cut
-     off; the matching negative margin cancels it back out so the pill's
-     settled visual position is unchanged. 114 (not exactly 110) leaves a
-     few px of safety margin. */
-  margin: 0 -4px 0 -114px;
-  padding: 4px 4px 4px 114px;
+  margin: 0 -4px;
+  /* Left padding bumped from 4px to 16px — see the comment on
+     .workflow-items > .workflow-label:first-child below for why. */
+  padding: 4px 4px 4px 16px;
   -webkit-overflow-scrolling: touch;
 }
 .workflow-scroll::-webkit-scrollbar { height: 6px; }
@@ -1024,6 +1011,16 @@ a:hover { color: var(--accent); }
 .reveal-left { transform: translateX(-110px); }
 .reveal-right { transform: translateX(110px); }
 .reveal-pop { transform: translateY(24px) scale(0.96); }
+/* The first pill in the case-study workflow row sits only ~18px from
+   .workflow-scroll's own left edge (its own overflow-x:auto makes it a
+   real clipping box — see that rule's history). The standard -110px
+   reveal-left shift would push it to a negative x, outside the
+   scrollable range, where it gets clipped to zero visible area and never
+   registers as intersecting — permanently stuck invisible. A smaller
+   shift keeps the same "slides in from the left" direction (matching
+   every other pill, per the uniform-reveal-direction preference) while
+   staying within that ~18px safety margin. */
+.workflow-items .workflow-label:first-child.reveal-left { transform: translateX(-14px); }
 
 .reveal-drop.in-view, .reveal-left.in-view, .reveal-right.in-view, .reveal-pop.in-view {
   opacity: 1;
@@ -1048,6 +1045,15 @@ a:hover { color: var(--accent); }
 
 @media (max-width: 1024px) {
   .wrap { padding: 0 28px; }
+  /* .wrap's padding shorthand above resets padding-top/bottom to 0 as a
+     side effect (shorthand always sets all four sides) — since it comes
+     later in the file than the base .section-head rule, that 0 wins and
+     every section-head section (About, Case Study, Contact, ...) loses
+     its vertical breathing room at this tier, with no tablet-specific
+     .section-head override to restore it (only the ≤720px mobile tier
+     redeclares it). Re-declare it here so tablet gets the same spacing
+     as desktop instead of sections touching each other. */
+  .section-head { padding-top: 56px; padding-bottom: 56px; }
   .nav-bar { margin: 24px 0 0; }
   .svc-section { padding: 56px 28px 72px; gap: 32px; }
   .scroll-hint { padding: 8px 28px 32px; }
