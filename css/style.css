@@ -760,6 +760,14 @@ a:hover { color: var(--accent); }
   .wrap { padding: 0 140px; }
   .svc-section { padding: 64px 140px 80px; }
   .scroll-hint { padding: 8px 140px 36px; }
+  /* .hero also carries .wrap, whose padding shorthand above resets
+     padding-top to 0 as a side effect — .hero's own padding-top:104px is
+     declared once, near the top of the file (before this block), so it
+     loses that collision here too (unlike .section-head just below,
+     which happens to be declared later in the file than this block and
+     so isn't affected). Restore it so the eyebrow text doesn't ride up
+     into the nav bar at any width down to 1024px, not just >1650px. */
+  .hero { padding-top: 104px; }
 }
 .svc-cta {
   display: inline-flex;
@@ -1054,6 +1062,15 @@ a:hover { color: var(--accent); }
      redeclares it). Re-declare it here so tablet gets the same spacing
      as desktop instead of sections touching each other. */
   .section-head { padding-top: 56px; padding-bottom: 56px; }
+  /* Same .wrap-shorthand collision as .section-head above — .hero also
+     carries the .wrap class, so its own padding-top:104px (set once,
+     unconditionally, near the top of this file) gets zeroed out by this
+     tier's .wrap rule too, letting the eyebrow text ("Systems &
+     Automation...") overlap the nav bar. Nav's own rendered height is
+     unchanged from desktop at this tier (only the ≤720px mobile tier
+     shrinks it), so this reuses the exact same 104px rather than a new
+     tablet-specific number. */
+  .hero { padding-top: 104px; }
   .nav-bar { margin: 24px 0 0; }
   .svc-section { padding: 56px 28px 72px; gap: 32px; }
   .scroll-hint { padding: 8px 28px 32px; }
