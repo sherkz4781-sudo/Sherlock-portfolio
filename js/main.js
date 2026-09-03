@@ -421,8 +421,8 @@
       canvas.classList.toggle('is-compact', mode === 'compact');
 
       var DESIGN_W = mode === 'compact' ? 420 : 1000;
-      var DESIGN_H = mode === 'compact' ? 360 : 515;
-      var scale = Math.min(1, canvas.getBoundingClientRect().width / DESIGN_W);
+      var DESIGN_H = mode === 'compact' ? 330 : 515;
+      var scale = Math.min(1, viewport.getBoundingClientRect().width / DESIGN_W);
       wrap.style.transform = 'translateX(-50%) scale(' + scale + ')';
       viewport.style.height = (DESIGN_H * scale) + 'px';
 
@@ -439,8 +439,8 @@
       // the visual sizes themselves live in style.css's .is-compact rules.
       var HUB_R = mode === 'compact' ? 76 : 101;
       var CIRCLE_R = mode === 'compact' ? 34 : 48;
-      var NODE_RX = mode === 'compact' ? 132 : 190;
-      var NODE_RY = mode === 'compact' ? 132 : 190;
+      var NODE_RX = mode === 'compact' ? 122 : 190;
+      var NODE_RY = mode === 'compact' ? 122 : 190;
       var LINE_INNER = HUB_R + 8;
 
       var beams = nodes.map(function (node, i) {

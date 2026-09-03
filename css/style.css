@@ -711,9 +711,9 @@ a:hover { color: var(--accent); }
      is also trimmed for this mode (below) since the tightened 360px design
      height otherwise still had the same fixed 40px top/bottom padding as
      every other diagram, undoing the point of tightening it. */
-  .svc-diagram .canvas--wheel.is-compact { padding: 20px 16px; }
+  .svc-diagram .canvas--wheel.is-compact { padding: 14px 22px; }
   .svc-diagram .canvas--wheel.is-compact .wheel-wrap {
-    width: 420px; height: 360px;
+    width: 420px; height: 330px;
   }
   /* Resizing the avatar/chip (202px->152px, 70x58->54x45) without also
      scaling their box-shadows left them carrying the full-size desktop
@@ -1044,6 +1044,15 @@ a:hover { color: var(--accent); }
   .proc-row { padding: 40px; gap: 32px; }
   .contact-head { font-size: 52px; }
   .about-heading { font-size: 28px; }
+  /* .svc-acc-row's own side padding stays 32px and .svc-acc-body-inner's
+     text-alignment padding-left stays 98px at this tier (neither is
+     overridden until the 720px mobile block below) — same lopsided-gutter
+     issue as mobile (leftGap 130px vs rightGap 32px, ~4x), fixed the same
+     way: cancel enough of the inherited inset that the diagram's own left
+     gutter reads ~2x the right one (target 64px vs 32px). The 720px block's
+     -44px later in the file overrides this for anything narrower, since
+     that block comes after this one in source order. */
+  .svc-diagram { margin-left: -66px; }
 }
 
 /* ================= Mobile ================= */
@@ -1073,6 +1082,11 @@ a:hover { color: var(--accent); }
   .svc-acc-idx { font-size: 32px; width: 48px; }
   .svc-acc-name { font-size: 18px; }
   .svc-acc-body-inner { padding-left: 64px; }
+  /* The 64px inset above aligns body text under the title, not under the
+     "03" index number — but it also shoves the diagram/wheel block over,
+     leaving a left gutter ~4x the right one. Pull the diagram back so its
+     own left gutter reads closer to 2x the right (20px row padding). */
+  .svc-diagram { margin-left: -44px; }
   .scroll-hint { padding: 8px 12px 24px; }
 
   .section-head { padding-top: 40px; padding-bottom: 40px; }
