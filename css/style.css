@@ -1108,7 +1108,7 @@ a:hover { color: var(--accent); }
   .menu-toggle { display: flex; }
   .theme-toggle { width: 40px; height: 40px; }
 
-  .hero { padding-top: 56px; text-align: left; }
+  .hero { padding-top: 48px; text-align: left; }
   .hero-avatar-slot {
     position: static;
     width: 110px;
