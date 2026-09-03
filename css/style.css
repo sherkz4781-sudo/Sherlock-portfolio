@@ -842,8 +842,23 @@ a:hover { color: var(--accent); }
 
 .workflow-scroll {
   overflow-x: auto;
-  margin: 0 -4px;
-  padding: 4px;
+  /* Left side gets a much bigger negative-margin/padding pair than the
+     right — overflow-x:auto forces overflow-y to compute as auto too (per
+     spec), so this becomes a real clipping/scroll box. Every pill uses
+     .reveal-left (translateX(-70px) mobile / -110px desktop) for its
+     pre-reveal state; the very first pill's own rest position is only 2px
+     from this container's edge, so shifting it further left by 70-110px
+     pushed it to a negative x — outside the scrollable [0, scrollWidth]
+     range — where it got clipped to zero visible area and never
+     registered as intersecting, permanently stuck invisible (same root
+     cause as the historical vertical-reveal-in-a-horizontal-scroller bug,
+     just on the primary axis this time). The 114px left padding gives the
+     transform room to exist inside the clipping box without being cut
+     off; the matching negative margin cancels it back out so the pill's
+     settled visual position is unchanged. 114 (not exactly 110) leaves a
+     few px of safety margin. */
+  margin: 0 -4px 0 -114px;
+  padding: 4px 4px 4px 114px;
   -webkit-overflow-scrolling: touch;
 }
 .workflow-scroll::-webkit-scrollbar { height: 6px; }
